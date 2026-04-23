@@ -262,10 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `<p class="menu-note" style="font-size: 0.9rem;">${item.note}</p>`
                 : '';
 
-            const memoBadge = item.memo
-                ? `<span class="menu-memo" style="display:inline-block; border:1px solid var(--primary-color, #333); color:var(--primary-color, #333); padding:2px 6px; font-size:0.7rem; margin-top:6px; letter-spacing:0; font-weight:bold;">${item.memo}</span>`
-                : '';
-
             const html = `
                 <div class="menu-item tilt" data-category="${item.category}" style="--delay: ${index + 1}" data-tilt-max="20">
                     ${imageBlock}
@@ -274,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p style="font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 4px;">${item.desc}</p>
                         ${noteBlock}
                         <p class="price" style="margin-top:8px; font-weight:bold; color:var(--primary-color);">${item.price}</p>
-                        ${memoBadge}
                     </div>
                 </div>
             `;
