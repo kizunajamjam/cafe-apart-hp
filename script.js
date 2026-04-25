@@ -62,7 +62,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalHeight = document.body.scrollHeight - window.innerHeight;
         const progress = (window.scrollY / totalHeight) * 100;
         if(progressBar) progressBar.style.width = progress + '%';
+
+        // Back to Top Visibility
+        const backToTopBtn = document.getElementById('back-to-top');
+        if (backToTopBtn) {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }
     });
+
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
     /* =========================================
        5. Menu Filtering
@@ -164,6 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 weatherTempEl.textContent = temp;
                 weatherIconEl.textContent = icon;
+
+                // Visual Enhancement: Background Overlay based on weather
+                const hero = document.querySelector('.hero');
+                if (hero) {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'weather-overlay';
+                    if (code === 0) overlay.classList.add('weather-clear');
+                    else if (code >= 1 && code <= 3) overlay.classList.add('weather-cloudy');
+                    else if (code >= 51) overlay.classList.add('weather-rainy');
+                    hero.appendChild(overlay);
+                }
             })
             .catch(err => {
                 console.error("Failed to load weather data", err);
@@ -254,8 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
         menuContainer.innerHTML = ''; 
 
         data.forEach((item, index) => {
-            const imageBlock = item.img 
-                ? `<div class="img-wrapper"><img src="${item.img}" alt="${item.title}" loading="lazy"></div>` 
+            // Fix mismatched image paths from CSV
+            let imageSrc = item.img;
+            if (imageSrc.includes('creamy-salmon.jpg')) {
+                imageSrc = imageSrc.replace('creamy-salmon.jpg', 'salmon-cream-udon.jpg');
+            }
+
+            const imageBlock = imageSrc 
+                ? `<div class="img-wrapper"><img src="${imageSrc}" alt="${item.title}" loading="lazy"></div>` 
                 : '';
 
             const noteBlock = item.note
