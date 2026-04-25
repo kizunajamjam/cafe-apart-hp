@@ -584,9 +584,7 @@ ul {
     flex-direction: row-reverse;
 }
 
-.menu-item.hide {
-    display: none;
-}
+.menu-item.hide { display: none !important; }
 
 .menu-item .img-wrapper {
     overflow: hidden;
@@ -945,6 +943,9 @@ ul {
 
 
 
+
+
+
 /* =========================================
    Intelligent Menu Layout Logic (Final Fix)
    ========================================= */
@@ -957,6 +958,10 @@ ul {
     background-color: var(--white) !important;
     justify-items: center !important;
     align-items: stretch !important;
+}
+
+.menu-item.hide {
+    display: none !important;
 }
 
 .img-wrapper {
@@ -986,14 +991,12 @@ ul {
     box-sizing: border-box !important;
 }
 
-/* Fallback Logo with perfect center (Nudged to 51.5% for visual weight balance) */
 .menu-item.show-logo::before {
     content: '' !important;
     grid-row: 1 !important;
     grid-column: 1 !important;
     background-image: url('assets/images/logo-minimalist.jpg') !important;
     background-repeat: no-repeat !important;
-    /* 51.5% is the 'sweet spot' that balances the cup body with the trailing steam line */
     background-position: 51.5% center !important; 
     background-size: 70% !important;
     opacity: 0.5 !important;
