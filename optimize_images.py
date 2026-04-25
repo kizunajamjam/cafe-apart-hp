@@ -48,6 +48,7 @@ def optimize_images(directory, max_size=(1200, 1200), quality=80):
 
     print(f"\nOptimization complete! Total space saved: {total_reduction/1024/1024:.2f}MB")
 
+
 if __name__ == "__main__":
     img_dir = r"C:\Users\yasuf\kizuna\Antigravity_Training\cafe-apart-hp\assets\images"
     optimize_images(img_dir)
