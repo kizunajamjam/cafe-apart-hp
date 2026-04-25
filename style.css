@@ -1074,3 +1074,118 @@ ul {
     }
 }
 
+
+
+
+
+
+
+.menu-item:not(:has(.img-wrapper)):hover::after {
+    opacity: 0.8;
+}
+
+
+.menu-item.show-logo:hover::after {
+    opacity: 0.7;
+}
+
+/* =========================================
+   Intelligent Menu Layout Logic
+   ========================================= */
+.menu-item {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+}
+
+.menu-info {
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+    margin-top: auto !important; /* Pushes text to the bottom */
+    background-color: var(--white) !important;
+    position: relative;
+    z-index: 5;
+}
+
+.img-wrapper {
+    flex-shrink: 0 !important;
+    z-index: 5;
+}
+
+/* Fallback Logo as a pseudo-element at the top */
+
+
+.menu-item.show-logo:hover::before {
+    opacity: 0.7;
+}
+
+
+
+
+
+
+
+/* =========================================
+   Intelligent Menu Layout Logic (Final Fix)
+   ========================================= */
+.menu-item {
+    display: grid !important;
+    grid-template-rows: 1fr auto !important;
+    grid-template-columns: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    background-color: var(--white) !important;
+    justify-items: center !important;
+    align-items: stretch !important;
+}
+
+.img-wrapper {
+    grid-row: 1 !important;
+    grid-column: 1 !important;
+    height: 100% !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+}
+
+.img-wrapper img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.menu-info {
+    grid-row: 2 !important;
+    grid-column: 1 !important;
+    width: 100% !important;
+    background-color: var(--white) !important;
+    padding: 24px 20px !important;
+    text-align: center !important;
+    z-index: 5;
+    position: relative;
+    box-sizing: border-box !important;
+}
+
+/* Fallback Logo with perfect center (Nudged to 51.5% for visual weight balance) */
+.menu-item.show-logo::before {
+    content: '' !important;
+    grid-row: 1 !important;
+    grid-column: 1 !important;
+    background-image: url('assets/images/logo-minimalist.jpg') !important;
+    background-repeat: no-repeat !important;
+    /* 51.5% is the 'sweet spot' that balances the cup body with the trailing steam line */
+    background-position: 51.5% center !important; 
+    background-size: 70% !important;
+    opacity: 0.5 !important;
+    transition: opacity 0.3s ease !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    z-index: 1;
+}
+
+.menu-item.show-logo:hover::before {
+    opacity: 0.8 !important;
+}

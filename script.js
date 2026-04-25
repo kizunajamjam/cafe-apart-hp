@@ -311,6 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         attachDynamicEvents();
+        adjustMenuLogos();
     }
 
     function attachDynamicEvents() {
@@ -356,4 +357,59 @@ document.addEventListener('DOMContentLoaded', () => {
     // Trigger the fetch!
     loadMenu();
 
+    /* =========================================
+       11. Dynamic Menu Logo Sizing
+       ========================================= */
+    function adjustMenuLogos() {
+        const items = Array.from(document.querySelectorAll('.menu-item'));
+        
+        // 1. Reset all
+        items.forEach(item => item.classList.remove('show-logo'));
+
+        // 2. Group items by their vertical position (rows)
+        const rows = {};
+        items.forEach(item => {
+            if (item.offsetParent === null) return; // Hidden elements
+            const top = Math.round(item.getBoundingClientRect().top);
+            if (!rows[top]) rows[top] = [];
+            rows[top].push(item);
+        });
+
+        // 3. Process each row
+        Object.values(rows).forEach(rowItems => {
+            // Check if this row contains any REAL image
+            const rowHasImage = rowItems.some(item => {
+                const imgWrap = item.querySelector('.img-wrapper');
+                return imgWrap && imgWrap.querySelector('img');
+            });
+
+            // If the row has at least one image, enable logos for the others if they are stretched
+            if (rowHasImage) {
+                rowItems.forEach(item => {
+                    const imgWrap = item.querySelector('.img-wrapper');
+                    if (imgWrap && imgWrap.querySelector('img')) return; // Already has image
+                    
+                    const info = item.querySelector('.menu-info');
+                    if (!info) return;
+
+                    const gap = item.getBoundingClientRect().height - info.getBoundingClientRect().height;
+                    if (gap > 60) {
+                        item.classList.add('show-logo');
+                    }
+                });
+            }
+        });
+    }
+
+    const menuObserver = new ResizeObserver(() => {
+        adjustMenuLogos();
+    });
+
+    // We start observing the menu container once it exists
+    const menuContainerEl = document.getElementById('menu-container');
+    if (menuContainerEl) {
+        menuObserver.observe(menuContainerEl);
+        // Also observe individual items as they are added? 
+        // Better: periodic check or after renderMenuItems
+    }
 });
