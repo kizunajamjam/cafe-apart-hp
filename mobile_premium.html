@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apart - Mobile Premium Menu</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="menu-core.css">
+    <link rel="stylesheet" href="style_mobile_premium.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Hero Section -->
+        <header class="premium-header">
+            <div class="header-overlay"></div>
+            <div class="header-content">
+                <h1 class="logo-text">Apart</h1>
+                <p class="tagline">Sophisticated Moments</p>
+                <div class="header-scroll-indicator">
+                    <span>Menu Scroll</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Category Filter -->
+        <nav class="category-nav">
+            <div class="nav-track">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="food">Food</button>
+                <button class="filter-btn" data-category="drink">Drink</button>
+                <button class="filter-btn" data-category="dessert">Dessert</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="menu-container">
+            <section id="menu-items" class="menu-grid">
+                <!-- Items will be handled by core logic or pre-rendered if static -->
+                <!-- For now, showing the structure -->
+                <div class="menu-item" data-category="food">
+                    <div class="item-image-wrapper">
+                        <img src="images/curry.jpg" alt="Curry" onerror="this.parentElement.classList.add('no-image')">
+                    </div>
+                    <div class="item-info">
+                        <h3 class="item-name">Special Curry</h3>
+                        <p class="item-price">¥1,200</p>
+                    </div>
+                </div>
+                <!-- ... other items ... -->
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <footer class="bottom-nav">
+            <a href="#menu" class="nav-item active">
+                <i class="fas fa-utensils"></i>
+                <span>Menu</span>
+            </a>
+            <a href="https://maps.google.com" target="_blank" class="nav-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Map</span>
+            </a>
+            <a href="tel:000-0000-0000" class="nav-item">
+                <i class="fas fa-phone-alt"></i>
+                <span>Call</span>
+            </a>
+        </footer>
+    </div>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+    <script>
+        // Custom mobile interactions
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

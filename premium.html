@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apart - Premium Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="menu-core.css">
+    <link rel="stylesheet" href="style_mobile_premium.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="premium-header">
+            <div class="header-overlay"></div>
+            <div class="header-content">
+                <h1 class="logo-text">Apart</h1>
+                <p class="tagline">Sophisticated Moments</p>
+            </div>
+        </header>
+
+        <nav class="category-nav">
+            <div class="nav-track">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="food">Food</button>
+                <button class="filter-btn" data-category="drink">Drink</button>
+                <button class="filter-btn" data-category="dessert">Dessert</button>
+            </div>
+        </nav>
+
+        <main class="menu-container">
+            <section id="menu-items" class="menu-grid">
+                <div class="menu-item" data-category="food">
+                    <div class="item-image-wrapper no-image"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Special Blend Coffee</h3>
+                        <p class="item-price">¥650</p>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="food">
+                    <div class="item-image-wrapper no-image"></div>
+                    <div class="item-info">
+                        <h3 class="item-name">Handmade Sandwich</h3>
+                        <p class="item-price">¥850</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-utensils"></i>
+                <span>Menu</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Map</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-phone-alt"></i>
+                <span>Call</span>
+            </a>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
