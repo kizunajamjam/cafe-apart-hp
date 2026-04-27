@@ -577,28 +577,28 @@ ul {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 40px;
+    align-items: stretch !important;
 }
 
 .menu-item {
     background: var(--white);
     border-radius: var(--border-radius);
-    overflow: hidden;
+    overflow: hidden !important;
     box-shadow: var(--card-shadow);
     transition: var(--transition);
     opacity: 1;
     transform-style: preserve-3d;
     border: 1px solid var(--border-color);
     padding: 5px;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
-.menu-item:nth-child(even) {
-    transform: translateY(30px);
-}
-
-.menu-item.hide { display: none !important; }
 
 .menu-item .img-wrapper {
     overflow: hidden;
     aspect-ratio: 4/3;
+    flex-shrink: 0;
 }
 
 .menu-item img {

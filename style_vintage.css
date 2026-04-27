@@ -509,29 +509,71 @@ ul {
 
 .concept-images {
     position: relative;
-    height: 600px;
+    width: 100%;
+    max-width: 800px;
+    height: 700px; /* Increased height for better overlap */
+    margin: 40px auto;
+    z-index: 10;
+}
+
+/* Elegant Corner Brackets */
+.concept-images::before, .concept-images::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    z-index: -1;
+    border: 2px solid var(--accent-color);
+    opacity: 0.8;
+}
+
+.concept-images::before {
+    top: -30px;
+    left: -30px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.concept-images::after {
+    bottom: -30px;
+    right: -30px;
+    border-left: none;
+    border-top: none;
 }
 
 .concept-images img {
-    position: absolute;
-    border-radius: var(--image-radius);
-    box-shadow: var(--card-shadow);
-    transform-style: preserve-3d;
+    position: absolute !important;
+    border-radius: 0 !important;
+    box-shadow: 20px 20px 0px rgba(92, 64, 51, 0.05); /* Classic offset shadow */
+    opacity: 1 !important;
+    visibility: visible !important;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    z-index: 10 !important;
 }
 
 .img-main {
-    width: 80%;
+    width: 85%;
+    height: 500px;
     top: 0;
     right: 0;
-    z-index: 1;
+    z-index: 11 !important;
+    border: 1px solid var(--border-color);
 }
 
 .img-sub {
-    width: 60%;
+    width: 65%;
+    height: 400px;
     bottom: 0;
     left: 0;
-    z-index: 2;
-    border: 10px solid var(--bg-light);
+    z-index: 12 !important;
+    border: 15px solid var(--white) !important;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);
+}
+
+.concept-images img:hover {
+    transform: scale(1.02);
+    z-index: 20 !important;
 }
 
 /* Menu Section */
@@ -573,12 +615,13 @@ ul {
 }
 
 .menu-item {
+    --menu-item-bg: transparent;
     display: flex;
     align-items: center;
-    background: transparent;
+    background: transparent !important;
     border-radius: 0;
     overflow: hidden;
-    box-shadow: none;
+    box-shadow: none !important;
     border-bottom: 1px dashed var(--border-color);
     padding: 20px 0;
     transition: var(--transition);
@@ -820,11 +863,20 @@ ul {
     }
     
     .concept-images {
+        position: relative;
+        width: 100%;
         height: 400px;
-        order: -1;
-        margin-bottom: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 1 !important;
     }
-    
+    .concept-images::before, .concept-images::after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border: 2px solid var(--accent-color);
     .img-main { width: 90%; }
     .img-sub { width: 70%; }
     
@@ -913,26 +965,46 @@ ul {
    Intelligent Menu Layout Logic
    ========================================= */
 .menu-item {
+    --menu-item-bg: transparent;
     display: flex !important;
     flex-direction: column !important;
     height: 100% !important;
     justify-content: flex-start !important;
     align-items: stretch !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 .menu-info {
     flex-grow: 0 !important;
     flex-shrink: 0 !important;
     margin-top: auto !important; /* Pushes text to the bottom */
-    background-color: var(--white) !important;
+    background-color: transparent !important;
     position: relative;
     z-index: 5;
+    padding: 20px 0;
+    text-align: center;
 }
 
 .img-wrapper {
     flex-shrink: 0 !important;
     z-index: 5;
+    background-color: transparent !important;
 }
+
+/* Plan A: Borderless & Transparent Menu Grid */
+.menu-grid, #menu-container {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.menu section, section#menu {
+    background-color: var(--bg-sand) !important;
+}
+
 
 /* Fallback Logo as a pseudo-element at the top */
 
