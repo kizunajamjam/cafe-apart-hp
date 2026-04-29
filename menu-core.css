@@ -12,6 +12,13 @@
     background-color: var(--menu-item-bg, var(--white)) !important;
     justify-items: center !important;
     align-items: stretch !important;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease !important;
+}
+
+.menu-item:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    z-index: 10 !important;
 }
 
 /* Ensure filtering works */
@@ -119,5 +126,5 @@
 
 .menu-item.span-2 .img-wrapper,
 .menu-item.span-2.show-logo::before {
-    aspect-ratio: 8/3 !important;
+    aspect-ratio: 2/1 !important;
 }

@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Use event delegation for cursor hover to handle dynamic elements
         document.addEventListener('mouseover', (e) => {
-            if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.tilt')) {
+            if (e.target.closest('a') || e.target.closest('button')) {
                 cursor.classList.add('hover');
             }
         });
         document.addEventListener('mouseout', (e) => {
-            if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.tilt')) {
+            if (e.target.closest('a') || e.target.closest('button')) {
                 cursor.classList.remove('hover');
             }
         });
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for(let i=1; i < lines.length; i++) {
                 // Regex for correctly splitting CSV containing quoted commas like "¥1,000"
                 const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
-                if(row.length >= 5) {
+                if(row.length >= 5 && row[2]) {
                     data.push({
                         category: row[0],
                         img: row[1] || "",
@@ -297,16 +297,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const limitedItems = data.filter(item => (item.category || '').toLowerCase() === 'limited' || (item.note && item.note.includes('期間限定')));
         const t2ItemsRaw = data.filter(item => {
             const isLimited = (item.category || '').toLowerCase() === 'limited' || (item.note && item.note.includes('期間限定'));
-            const isCider = (item.title && item.title.includes('サイダー')) || (item.desc && item.desc.includes('Cider'));
-            return !isLimited && !isCider && ((item.desc && item.desc.toLowerCase().includes('t2')) || (item.title && item.title.toLowerCase().includes('t2')));
+            const isT2 = (item.category || '').toLowerCase() === 't2';
+            return !isLimited && isT2;
         });
         
         let t2Items = [];
         if (t2ItemsRaw.length > 0) {
             let combinedHtml = '<div style="text-align: left; margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px;">';
             t2ItemsRaw.forEach((t, i) => {
-                const border = (i === t2ItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 12px; margin-bottom: 12px;';
-                combinedHtml += `<div style="${border}"><strong style="color: var(--primary-color); font-size: 1rem;">${t.title}</strong><br><span style="font-size: 0.85rem;">${t.note}</span></div>`;
+                const border = (i === t2ItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
+                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}" style="flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;"><img src="${t.img}" style="width: 100%; height: 100%; object-fit: cover;" alt="${t.title}" loading="lazy"></div>` : '';
+                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong><br><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
             });
             combinedHtml += '</div>';
 
@@ -329,9 +330,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (kidsItemsRaw.length > 0) {
             let combinedHtml = '<div style="text-align: left; margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px;">';
             kidsItemsRaw.forEach((t, i) => {
-                const border = (i === kidsItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 12px; margin-bottom: 12px;';
-                combinedHtml += `<div style="${border}"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1rem;">${t.title}</strong><strong style="color: var(--primary-color); font-weight: bold;">${t.price}</strong></div><span style="font-size: 0.85rem;">${t.note}</span></div>`;
+                const border = (i === kidsItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
+                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}" style="flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;"><img src="${t.img}" style="width: 100%; height: 100%; object-fit: cover;" alt="${t.title}" loading="lazy"></div>` : '';
+                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong><strong style="color: var(--primary-color); font-weight: bold;">${t.price}</strong></div><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
             });
+            combinedHtml += '<div style="margin-top: 15px; padding-top: 12px; border-top: 2px solid rgba(0,0,0,0.05); text-align: center; font-weight: bold; color: #d35400;">※お子様がご注文の場合、キッズドリンクがセットで付きます！</div>';
             combinedHtml += '</div>';
 
             kidsItems = [{
@@ -346,8 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const otherItems = data.filter(item => {
             const isLimited = (item.category || '').toLowerCase() === 'limited' || (item.note && item.note.includes('期間限定'));
-            const isCider = (item.title && item.title.includes('サイダー')) || (item.desc && item.desc.includes('Cider'));
-            const isT2 = !isCider && ((item.desc && item.desc.toLowerCase().includes('t2')) || (item.title && item.title.toLowerCase().includes('t2')));
+            const isT2 = (item.category || '').toLowerCase() === 't2';
             const isKids = (item.category || '').toLowerCase() === 'kids';
             return !isLimited && !isT2 && !isKids;
         });
@@ -377,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const extraClass = (groupId === 't2' || groupId === 'kids' || groupId === 'limited') ? ' span-2' : '';
 
                 html += `
-                    <div class="menu-item tilt${extraClass}" data-category="${item.category}" style="--delay: ${index + 1}" data-tilt-max="20">
+                    <div class="menu-item${extraClass}" data-category="${item.category}" style="--delay: ${index + 1}">
                         ${imageBlock}
                         <div class="menu-info">
                             <h4>${item.title}</h4>
@@ -428,43 +430,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function attachDynamicEvents() {
-        // Attach Lightbox logic to new images
-        const menuImages = document.querySelectorAll('.img-wrapper img');
-        menuImages.forEach(img => {
-            img.addEventListener('click', (e) => {
+        // Attach Lightbox logic to new images and thumbnails
+        const triggers = document.querySelectorAll('.img-wrapper img, .clickable-thumb');
+        triggers.forEach(el => {
+            el.addEventListener('click', (e) => {
                 e.stopPropagation();
-                lightboxImg.src = img.getAttribute('data-lightbox-src') || img.src;
-                lightbox.classList.add('active');
+                const src = el.getAttribute('data-lightbox-src') || el.src;
+                if (src) {
+                    lightboxImg.src = src;
+                    lightbox.classList.add('active');
+                }
             });
         });
-
-        // Initialize 3D Tilt for new items
-        const tiltElements = document.querySelectorAll('.tilt');
-        if(!isTouchDevice) {
-            tiltElements.forEach(el => {
-                el.addEventListener('mousemove', handleTilt);
-                el.addEventListener('mouseleave', resetTilt);
-            });
-        }
-    }
-
-    function handleTilt(e) {
-        const el = this;
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const percentX = (x - centerX) / centerX;
-        const percentY = (y - centerY) / centerY;
-        const maxTilt = el.getAttribute('data-tilt-max') || 10;
-        const tiltX = (percentY * maxTilt * -1).toFixed(2);
-        const tiltY = (percentX * maxTilt).toFixed(2);
-        el.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
-    }
-
-    function resetTilt() {
-        this.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
     }
 
     // Trigger the fetch!
