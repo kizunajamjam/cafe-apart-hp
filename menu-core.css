@@ -5,7 +5,7 @@
 /* Grid structure for aligned menu items */
 .menu-item {
     display: grid !important;
-    grid-template-rows: 1fr auto !important;
+    grid-template-rows: auto 1fr !important;
     grid-template-columns: 100% !important;
     height: 100% !important;
     overflow: hidden !important;
@@ -44,6 +44,14 @@
     z-index: 5;
     position: relative;
     box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.menu-info .price {
+    margin-top: auto !important;
+    padding-top: 8px !important;
+    font-size: 1.15rem !important;
 }
 
 /* Fallback Logo with perfect center */
@@ -60,10 +68,56 @@
     transition: opacity 0.3s ease !important;
     width: 100% !important;
     height: 100% !important;
+    aspect-ratio: 4/3 !important;
     display: block !important;
     z-index: 1;
 }
 
 .menu-item.show-logo:hover::before {
     opacity: 0.8 !important;
+}
+
+/* Mobile 2-column menu layout */
+@media (max-width: 768px) {
+    .menu-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+    .menu-info {
+        padding: 12px 10px !important;
+    }
+    .menu-info h4 {
+        font-size: 0.95rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 6px !important;
+    }
+    .menu-info p {
+        font-size: 0.75rem !important;
+        line-height: 1.4 !important;
+    }
+    .menu-item .price {
+        font-size: 1.05rem !important;
+        margin-top: 6px !important;
+    }
+    .menu-section-title {
+        font-size: 1.5rem !important;
+        margin: 30px 0 15px !important;
+    }
+    .menu-filters {
+        gap: 10px !important;
+    }
+    .filter-btn {
+        padding: 6px 16px !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+/* Wide items (2 blocks) */
+.menu-item.span-2 {
+    grid-column: span 2 !important;
+}
+
+.menu-item.span-2 .img-wrapper,
+.menu-item.span-2.show-logo::before {
+    aspect-ratio: 8/3 !important;
 }

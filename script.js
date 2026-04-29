@@ -107,6 +107,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     item.classList.add('hide');
                 }
             });
+
+            // Update group titles visibility
+            document.querySelectorAll('.menu-group').forEach(group => {
+                const visibleItems = group.querySelectorAll('.menu-item:not(.hide)');
+                const title = group.querySelector('.menu-section-title');
+                if (title) {
+                    if (visibleItems.length === 0) {
+                        title.style.display = 'none';
+                    } else {
+                        title.style.display = 'block';
+                    }
+                }
+            });
         });
     });
 
@@ -281,37 +294,137 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderMenuItems(data) {
         menuContainer.innerHTML = ''; 
 
-        data.forEach((item, index) => {
-            // Fix mismatched image paths from CSV
-            let imageSrc = item.img;
-            if (imageSrc.includes('creamy-salmon.jpg')) {
-                imageSrc = imageSrc.replace('creamy-salmon.jpg', 'salmon-cream-udon.jpg');
-            }
-
-            const imageBlock = imageSrc 
-                ? `<div class="img-wrapper"><img src="${imageSrc}" alt="${item.title}" loading="lazy"></div>` 
-                : '';
-
-            const noteBlock = item.note
-                ? `<p class="menu-note" style="font-size: 0.9rem;">${item.note}</p>`
-                : '';
-
-            const html = `
-                <div class="menu-item tilt" data-category="${item.category}" style="--delay: ${index + 1}" data-tilt-max="20">
-                    ${imageBlock}
-                    <div class="menu-info">
-                        <h4>${item.title}</h4>
-                        <p style="font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 4px;">${item.desc}</p>
-                        ${noteBlock}
-                        <p class="price" style="margin-top:8px; font-weight:bold; color:var(--primary-color);">${item.price}</p>
-                    </div>
-                </div>
-            `;
-            menuContainer.insertAdjacentHTML('beforeend', html);
+        const limitedItems = data.filter(item => (item.category || '').toLowerCase() === 'limited' || (item.note && item.note.includes('期間限定')));
+        const t2ItemsRaw = data.filter(item => {
+            const isLimited = (item.category || '').toLowerCase() === 'limited' || (item.note && item.note.includes('期間限定'));
+            const isCider = (item.title && item.title.includes('サイダー')) || (item.desc && item.desc.includes('Cider'));
+            return !isLimited && !isCider && ((item.desc && item.desc.toLowerCase().includes('t2')) || (item.title && item.title.toLowerCase().includes('t2')));
         });
+        
+        let t2Items = [];
+        if (t2ItemsRaw.length > 0) {
+            let combinedHtml = '<div style="text-align: left; margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px;">';
+            t2ItemsRaw.forEach((t, i) => {
+                const border = (i === t2ItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 12px; margin-bottom: 12px;';
+                combinedHtml += `<div style="${border}"><strong style="color: var(--primary-color); font-size: 1rem;">${t.title}</strong><br><span style="font-size: 0.85rem;">${t.note}</span></div>`;
+            });
+            combinedHtml += '</div>';
+
+            t2Items = [{
+                category: 'drink',
+                img: 'assets/images/tea-set-top-view.jpg',
+                title: 'T2 Tea Collection',
+                desc: 'オーストラリア・メルボルン発の人気紅茶。<br>香り豊かなブレンドをお楽しみください。',
+                price: 'Cup ¥700 / Pot ¥1,000',
+                note: combinedHtml
+            }];
+        }
+
+        const kidsItemsRaw = data.filter(item => {
+            const isLimited = (item.category || '').toLowerCase() === 'limited' || (item.note && item.note.includes('期間限定'));
+            return !isLimited && (item.category || '').toLowerCase() === 'kids';
+        });
+        
+        let kidsItems = [];
+        if (kidsItemsRaw.length > 0) {
+            let combinedHtml = '<div style="text-align: left; margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px;">';
+            kidsItemsRaw.forEach((t, i) => {
+                const border = (i === kidsItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 12px; margin-bottom: 12px;';
+                combinedHtml += `<div style="${border}"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1rem;">${t.title}</strong><strong style="color: var(--primary-color); font-weight: bold;">${t.price}</strong></div><span style="font-size: 0.85rem;">${t.note}</span></div>`;
+            });
+            combinedHtml += '</div>';
+
+            kidsItems = [{
+                category: 'kids',
+                img: 'assets/images/menu-kids-dessert.jpg',
+                title: 'Kids Menu',
+                desc: 'アレルギーに配慮した、お子様向けの安心メニューです。',
+                price: '',
+                note: combinedHtml
+            }];
+        }
+        
+        const otherItems = data.filter(item => {
+            const isLimited = (item.category || '').toLowerCase() === 'limited' || (item.note && item.note.includes('期間限定'));
+            const isCider = (item.title && item.title.includes('サイダー')) || (item.desc && item.desc.includes('Cider'));
+            const isT2 = !isCider && ((item.desc && item.desc.toLowerCase().includes('t2')) || (item.title && item.title.toLowerCase().includes('t2')));
+            const isKids = (item.category || '').toLowerCase() === 'kids';
+            return !isLimited && !isT2 && !isKids;
+        });
+
+        function renderGroup(title, items, groupId) {
+            if (items.length === 0) return;
+            
+            let html = `<div class="menu-group" id="group-${groupId}" style="display: contents;">`;
+            if (title) {
+                html += `<div class="menu-section-title content-fade" style="grid-column: 1 / -1; width: 100%; text-align: center; margin: 40px 0 20px; font-family: var(--font-en, serif); font-size: 1.8rem; font-weight: 500; color: var(--primary-color, #333); border-bottom: 1px solid var(--primary-color, #333); padding-bottom: 10px; display: block;">${title}</div>`;
+            }
+            
+            items.forEach((item, index) => {
+                let imageSrc = item.img;
+                if (imageSrc && imageSrc.includes('creamy-salmon.jpg')) {
+                    imageSrc = imageSrc.replace('creamy-salmon.jpg', 'salmon-cream-udon.jpg');
+                }
+
+                const imageBlock = imageSrc 
+                    ? `<div class="img-wrapper"><img src="${imageSrc}" ${item.lightboxSrc ? `data-lightbox-src="${item.lightboxSrc}"` : ''} alt="${item.title}" loading="lazy"></div>` 
+                    : '';
+
+                const noteBlock = item.note
+                    ? `<div class="menu-note" style="font-size: 0.9rem; margin-top: 8px;">${item.note}</div>`
+                    : '';
+                    
+                const extraClass = (groupId === 't2' || groupId === 'kids' || groupId === 'limited') ? ' span-2' : '';
+
+                html += `
+                    <div class="menu-item tilt${extraClass}" data-category="${item.category}" style="--delay: ${index + 1}" data-tilt-max="20">
+                        ${imageBlock}
+                        <div class="menu-info">
+                            <h4>${item.title}</h4>
+                            <p style="font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 4px;">${item.desc}</p>
+                            ${noteBlock}
+                            <p class="price" style="margin-top:8px; font-weight:bold; color:var(--primary-color);">${item.price}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            
+            if (groupId === 'limited') {
+                const filtersEl = document.querySelector('.menu-filters');
+                if (filtersEl) {
+                    const limitedGrid = document.createElement('div');
+                    limitedGrid.className = 'menu-grid';
+                    limitedGrid.style.marginBottom = '40px';
+                    limitedGrid.innerHTML = html;
+                    filtersEl.parentNode.insertBefore(limitedGrid, filtersEl);
+                    return;
+                }
+            }
+            menuContainer.insertAdjacentHTML('beforeend', html);
+        }
+
+        const standardDrinkItems = otherItems.filter(item => (item.category || '').toLowerCase() === 'drink');
+        const standardFoodItems = otherItems.filter(item => (item.category || '').toLowerCase() === 'food');
+        const standardSweetsItems = otherItems.filter(item => (item.category || '').toLowerCase() === 'sweets');
+        const standardMiscItems = otherItems.filter(item => !['drink', 'food', 'sweets'].includes((item.category || '').toLowerCase()));
+
+        renderGroup('🌟 期間限定 / Limited Time', limitedItems, 'limited');
+        renderGroup('☕ T2 Tea Collection', t2Items, 't2');
+        renderGroup('🍹 ドリンク / Drink', standardDrinkItems, 'drink-group');
+        renderGroup('🍛 フード / Food', standardFoodItems, 'food-group');
+        renderGroup('🍰 スイーツ / Sweets', standardSweetsItems, 'sweets-group');
+        renderGroup('🍽️ その他 / Others', standardMiscItems, 'misc-group');
+        renderGroup('🧸 キッズメニュー / Kids Menu', kidsItems, 'kids');
 
         attachDynamicEvents();
         adjustMenuLogos();
+
+        // Trigger IntersectionObserver for new fade elements
+        if (typeof observer !== 'undefined') {
+            const fadeElements = document.querySelectorAll('.menu-section-title.content-fade:not(.visible)');
+            fadeElements.forEach(el => observer.observe(el));
+        }
     }
 
     function attachDynamicEvents() {
@@ -320,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menuImages.forEach(img => {
             img.addEventListener('click', (e) => {
                 e.stopPropagation();
-                lightboxImg.src = img.src;
+                lightboxImg.src = img.getAttribute('data-lightbox-src') || img.src;
                 lightbox.classList.add('active');
             });
         });
