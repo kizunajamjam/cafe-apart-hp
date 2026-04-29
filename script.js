@@ -98,7 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
             menuItems.forEach(item => {
                 const category = item.getAttribute('data-category');
                 
-                if (filterValue === 'all' || filterValue === category) {
+                if (filterValue === 'all' || 
+                    filterValue === category || 
+                    category === 'limited' || 
+                    (filterValue === 'drink' && category === 't2')) {
                     item.classList.remove('hide');
                     item.style.animation = 'none';
                     item.offsetHeight; 
@@ -205,12 +208,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     else if (code >= 51) overlay.classList.add('weather-rainy');
                     hero.appendChild(overlay);
                 }
+                // Click to see recommendation
+                weatherWidget.style.cursor = 'pointer';
+                weatherWidget.title = 'Click for recommendation';
+                
+                weatherWidget.addEventListener('click', () => {
+                    // Mood Shift: Briefly change site vibe
+                    const root = document.documentElement;
+                    const originalPrimary = getComputedStyle(root).getPropertyValue('--primary-color');
+                    if (code === 0) root.style.setProperty('--primary-color', '#e67e22'); // Sunny Orange
+                    else if (code >= 51) root.style.setProperty('--primary-color', '#3498db'); // Rainy Blue
+                    
+                    // Interaction Feedback
+                    weatherWidget.style.transform = 'scale(0.9) rotate(-3deg)';
+                    setTimeout(() => weatherWidget.style.transform = '', 150);
+                    
+                    setTimeout(() => {
+                        root.style.setProperty('--primary-color', originalPrimary);
+                    }, 5000);
+                });
             })
             .catch(err => {
                 console.error("Failed to load weather data", err);
                 if(weatherWidget) weatherWidget.style.display = 'none';
             });
     }
+
+    // Add float animation for tip
+    const styleTip = document.createElement('style');
+    styleTip.textContent = `
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+    `;
+    document.head.appendChild(styleTip);
 
     /* =========================================
        9. Image Lightbox (Setup UI)
@@ -291,6 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function formatPrice(price) {
+        if (!price) return '';
+        return price.toString().replace(/\d{4,}/g, m => parseInt(m).toLocaleString());
+    }
+
     function renderMenuItems(data) {
         menuContainer.innerHTML = ''; 
 
@@ -303,20 +340,58 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let t2Items = [];
         if (t2ItemsRaw.length > 0) {
+            const cupPotItems = t2ItemsRaw.filter(t => (t.price || '').includes('Cup') || (t.price || '').includes('Pot'));
+            const specialItems = t2ItemsRaw.filter(t => !((t.price || '').includes('Cup') || (t.price || '').includes('Pot')));
+
+            // Find most common price among Cup/Pot items
+            let commonPrice = '';
+            if (cupPotItems.length > 0) {
+                const priceCounts = {};
+                cupPotItems.forEach(t => priceCounts[t.price] = (priceCounts[t.price] || 0) + 1);
+                let maxCount = 0;
+                for (const p in priceCounts) {
+                    if (priceCounts[p] > maxCount) { maxCount = priceCounts[p]; commonPrice = formatPrice(p); }
+                }
+            }
+
             let combinedHtml = '<div style="text-align: left; margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px;">';
-            t2ItemsRaw.forEach((t, i) => {
-                const border = (i === t2ItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
+            
+            // 1. Render Tea Group Header
+            if (cupPotItems.length > 0) {
+                combinedHtml += `<div style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: baseline;">
+                                    <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary-color); font-weight: bold;">Tea Selection</span>
+                                    <span style="font-size: 0.9rem; color: var(--primary-color); font-weight: bold;">${commonPrice}</span>
+                                 </div>`;
+            }
+
+            // 2. Render Cup/Pot Group Items
+            cupPotItems.forEach((t, i) => {
+                const border = (i === cupPotItems.length - 1 && specialItems.length === 0) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
                 const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}" style="flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;"><img src="${t.img}" style="width: 100%; height: 100%; object-fit: cover;" alt="${t.title}" loading="lazy"></div>` : '';
-                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong><br><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
+                const displayPrice = (formatPrice(t.price) !== commonPrice) ? `<strong style="color: var(--primary-color); font-weight: bold;">${formatPrice(t.price)}</strong>` : '';
+                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong>${displayPrice}</div><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
             });
+
+            // 3. Separator if both groups exist
+            if (cupPotItems.length > 0 && specialItems.length > 0) {
+                combinedHtml += '<div style="margin: 25px 0; border-top: 2px solid rgba(0,0,0,0.08); position: relative;"><span style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #f9f9f9; padding: 0 15px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary-color); font-weight: bold;">Others</span></div>';
+            }
+
+            // 4. Render Special Items
+            specialItems.forEach((t, i) => {
+                const border = (i === specialItems.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
+                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}" style="flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;"><img src="${t.img}" style="width: 100%; height: 100%; object-fit: cover;" alt="${t.title}" loading="lazy"></div>` : '';
+                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong><strong style="color: var(--primary-color); font-weight: bold;">${formatPrice(t.price)}</strong></div><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
+            });
+
             combinedHtml += '</div>';
 
             t2Items = [{
-                category: 'drink',
+                category: 't2',
                 img: 'assets/images/tea-set-top-view.jpg',
                 title: 'T2 Tea Collection',
                 desc: 'オーストラリア・メルボルン発の人気紅茶。<br>香り豊かなブレンドをお楽しみください。',
-                price: 'Cup ¥700 / Pot ¥1,000',
+                price: '',
                 note: combinedHtml
             }];
         }
@@ -328,20 +403,44 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let kidsItems = [];
         if (kidsItemsRaw.length > 0) {
+            // Find most common price
+            const priceCounts = {};
+            kidsItemsRaw.forEach(t => priceCounts[t.price] = (priceCounts[t.price] || 0) + 1);
+            let commonPrice = '';
+            let maxCount = 0;
+            for (const p in priceCounts) {
+                if (priceCounts[p] > maxCount) { maxCount = priceCounts[p]; commonPrice = formatPrice(p); }
+            }
+
             let combinedHtml = '<div style="text-align: left; margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px;">';
+            
+            // 1. Kids Group Header
+            combinedHtml += `<div style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: baseline;">
+                                <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary-color); font-weight: bold;">Kids Selection</span>
+                                <span style="font-size: 0.9rem; color: var(--primary-color); font-weight: bold;">${commonPrice}</span>
+                             </div>`;
+
+            // 2. Render Items
             kidsItemsRaw.forEach((t, i) => {
                 const border = (i === kidsItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
                 const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}" style="flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;"><img src="${t.img}" style="width: 100%; height: 100%; object-fit: cover;" alt="${t.title}" loading="lazy"></div>` : '';
-                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong><strong style="color: var(--primary-color); font-weight: bold;">${t.price}</strong></div><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
+                
+                // Only show price if it differs from commonPrice
+                const displayPrice = (formatPrice(t.price) !== commonPrice) ? `<strong style="color: var(--primary-color); font-weight: bold;">${formatPrice(t.price)}</strong>` : '';
+                
+                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong>${displayPrice}</div><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
             });
-            combinedHtml += '<div style="margin-top: 15px; padding-top: 12px; border-top: 2px solid rgba(0,0,0,0.05); text-align: center; font-weight: bold; color: #d35400;">※お子様がご注文の場合、キッズドリンクがセットで付きます！</div>';
+
+            // Allergy notice at the bottom
+            combinedHtml += '<div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(0,0,0,0.1); text-align: center;"><span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); font-weight: bold; display: block; margin-bottom: 4px;">Rice Flour & Allergy-Friendly</span><span style="font-size: 0.7rem; color: var(--text-muted);">米粉を使用したアレルギー配慮メニューです</span></div>';
+            
             combinedHtml += '</div>';
 
             kidsItems = [{
                 category: 'kids',
                 img: 'assets/images/menu-kids-dessert.jpg',
-                title: 'Kids Menu',
-                desc: 'アレルギーに配慮した、お子様向けの安心メニューです。',
+                title: 'Kids Drink Service',
+                desc: 'お子様にはキッズドリンク付き',
                 price: '',
                 note: combinedHtml
             }];
@@ -359,7 +458,16 @@ document.addEventListener('DOMContentLoaded', () => {
             
             let html = `<div class="menu-group" id="group-${groupId}" style="display: contents;">`;
             if (title) {
-                html += `<div class="menu-section-title content-fade" style="grid-column: 1 / -1; width: 100%; text-align: center; margin: 40px 0 20px; font-family: var(--font-en, serif); font-size: 1.8rem; font-weight: 500; color: var(--primary-color, #333); border-bottom: 1px solid var(--primary-color, #333); padding-bottom: 10px; display: block;">${title}</div>`;
+                const parts = title.split(' / ');
+                const mainTitle = parts[0].trim();
+                const subTitle = parts[1] ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; font-weight: normal; letter-spacing: 0.2em; text-transform: none;">— ${parts[1].trim()} —</div>` : '';
+                
+                html += `<div class="menu-section-title content-fade" style="grid-column: 1 / -1; width: 100%; text-align: center; margin: 80px 0 40px;">
+                            <h2 style="font-family: var(--font-en); font-size: 1.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary-color); margin: 0; padding-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); display: inline-block; min-width: 200px;">
+                                ${mainTitle}
+                                ${subTitle}
+                            </h2>
+                        </div>`;
             }
             
             items.forEach((item, index) => {
@@ -382,10 +490,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="menu-item${extraClass}" data-category="${item.category}" style="--delay: ${index + 1}">
                         ${imageBlock}
                         <div class="menu-info">
-                            <h4>${item.title}</h4>
-                            <p style="font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 4px;">${item.desc}</p>
+                            ${item.category === 't2' || item.category === 'kids'
+                                ? `<div style="text-align: center; margin-bottom: 15px;">
+                                     <h4 style="margin: 0 0 4px 0;">${item.title}</h4>
+                                     <p style="font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em; margin: 0; opacity: 0.8;">${item.desc}</p>
+                                   </div>`
+                                : `<h4>${item.title}</h4>
+                                   <p style="font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 4px;">${item.desc}</p>`
+                            }
                             ${noteBlock}
-                            <p class="price" style="margin-top:8px; font-weight:bold; color:var(--primary-color);">${item.price}</p>
+                            ${(!['t2', 'kids'].includes(item.category)) 
+                                ? `<p class="price" style="margin-top:8px; font-weight:bold; color:var(--primary-color);">${formatPrice(item.price)}</p>` 
+                                : ''
+                            }
                         </div>
                     </div>
                 `;
@@ -411,13 +528,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const standardSweetsItems = otherItems.filter(item => (item.category || '').toLowerCase() === 'sweets');
         const standardMiscItems = otherItems.filter(item => !['drink', 'food', 'sweets'].includes((item.category || '').toLowerCase()));
 
-        renderGroup('🌟 期間限定 / Limited Time', limitedItems, 'limited');
-        renderGroup('☕ T2 Tea Collection', t2Items, 't2');
-        renderGroup('🍹 ドリンク / Drink', standardDrinkItems, 'drink-group');
-        renderGroup('🍛 フード / Food', standardFoodItems, 'food-group');
-        renderGroup('🍰 スイーツ / Sweets', standardSweetsItems, 'sweets-group');
-        renderGroup('🍽️ その他 / Others', standardMiscItems, 'misc-group');
-        renderGroup('🧸 キッズメニュー / Kids Menu', kidsItems, 'kids');
+        renderGroup('Limited Time / 期間限定', limitedItems, 'limited');
+        renderGroup('T2 Tea Collection', t2Items, 't2');
+        renderGroup('Drink', standardDrinkItems, 'drink-group');
+        renderGroup('Food', standardFoodItems, 'food-group');
+        renderGroup('Sweets', standardSweetsItems, 'sweets-group');
+        renderGroup('Others', standardMiscItems, 'misc-group');
+        renderGroup('Kids Selection', kidsItems, 'kids');
 
         attachDynamicEvents();
         adjustMenuLogos();
