@@ -1130,3 +1130,33 @@ ul {
 
 
 
+/* Weather Effects Animations */
+.rain-container, .sun-container {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 9999; overflow: hidden;
+}
+
+.rain-drop {
+    position: absolute; width: 2px; height: 15px;
+    background: rgba(255, 255, 255, 0.4);
+    bottom: 100%; animation: fall linear infinite;
+}
+
+@keyframes fall {
+    to { transform: translateY(110vh); }
+}
+
+.sunbeam {
+    position: absolute; top: 50%; left: 50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(230, 126, 34, 0.1) 0%, rgba(230, 126, 34, 0) 70%);
+    transform: translate(-50%, -50%) scale(0);
+    animation: sunGrow 5s ease-out forwards;
+}
+
+@keyframes sunGrow {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    20% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    80% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+}

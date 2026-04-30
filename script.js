@@ -216,10 +216,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Mood Shift: Briefly change site vibe
                     const root = document.documentElement;
                     const originalPrimary = getComputedStyle(root).getPropertyValue('--primary-color');
-                    if (code === 0) root.style.setProperty('--primary-color', '#e67e22'); // Sunny Orange
-                    else if (code >= 51) root.style.setProperty('--primary-color', '#3498db'); // Rainy Blue
                     
-                    // Interaction Feedback
+                    if (code >= 51) {
+                        // RAIN EFFECT
+                        root.style.setProperty('--primary-color', '#3498db');
+                        const container = document.createElement('div');
+                        container.className = 'rain-container';
+                        for (let i = 0; i < 50; i++) {
+                            const drop = document.createElement('div');
+                            drop.className = 'rain-drop';
+                            drop.style.left = Math.random() * 100 + 'vw';
+                            drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                            drop.style.animationDelay = Math.random() * 2 + 's';
+                            container.appendChild(drop);
+                        }
+                        document.body.appendChild(container);
+                        setTimeout(() => container.remove(), 5000);
+                    } else if (code === 0) {
+                        // SUNNY EFFECT
+                        root.style.setProperty('--primary-color', '#e67e22');
+                        const container = document.createElement('div');
+                        container.className = 'sun-container';
+                        const sun = document.createElement('div');
+                        sun.className = 'sunbeam';
+                        container.appendChild(sun);
+                        document.body.appendChild(container);
+                        setTimeout(() => container.remove(), 5000);
+                    }
+                    
+                    // Interaction Feedback (Pulse)
                     weatherWidget.style.transform = 'scale(0.9) rotate(-3deg)';
                     setTimeout(() => weatherWidget.style.transform = '', 150);
                     
