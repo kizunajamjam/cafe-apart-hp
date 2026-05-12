@@ -690,7 +690,8 @@ ul {
 .marquee-content {
     display: flex;
     flex-wrap: nowrap;
-    animation: gallery-animation 10s linear infinite;
+    flex-shrink: 0;
+    animation: gallery-animation 25s linear infinite;
 }
 
 .gallery-img {
@@ -712,12 +713,12 @@ ul {
 
 @keyframes gallery-animation {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    100% { transform: translateX(-100%); }
 }
 
 @media (max-width: 768px) {
     .marquee-content {
-        animation-duration: 10s;
+        animation-duration: 30s;
     }
 }
 
