@@ -59,6 +59,8 @@
     margin-top: auto !important;
     padding-top: 8px !important;
     font-size: 1.15rem !important;
+    font-weight: bold;
+    color: var(--primary-color);
 }
 
 /* Fallback Logo with perfect center */
@@ -127,4 +129,217 @@
 .menu-item.span-2 .img-wrapper,
 .menu-item.span-2.show-logo::before {
     aspect-ratio: 2/1 !important;
+}
+
+/* =========================================
+   Dynamic Menu Rendering (script.js)
+   ========================================= */
+
+.menu-group {
+    display: contents;
+}
+
+.menu-loading {
+    text-align: center;
+    padding: 60px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.menu-error {
+    color: red;
+    text-align: center;
+}
+
+/* Group section titles */
+.menu-section-title {
+    grid-column: 1 / -1;
+    width: 100%;
+    text-align: center;
+    margin: 80px 0 40px;
+}
+
+.menu-section-title h2 {
+    font-family: var(--font-en);
+    font-size: 1.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    margin: 0;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: inline-block;
+    min-width: 200px;
+}
+
+.menu-section-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-weight: normal;
+    letter-spacing: 0.2em;
+    text-transform: none;
+}
+
+/* Item text */
+.menu-item-desc {
+    font-family: var(--font-en);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.menu-item-centered {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.menu-item-centered h4 {
+    margin: 0 0 4px 0;
+}
+
+.menu-item-centered p {
+    font-family: var(--font-en);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    margin: 0;
+    opacity: 0.8;
+}
+
+.menu-note {
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+/* Combined list card (T2 / Kids) */
+.menu-combined {
+    text-align: left;
+    margin: 20px 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    background: rgba(0,0,0,0.03);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.menu-combined-header {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.menu-combined-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.menu-combined-price {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.menu-combined-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    border-bottom: 1px dashed rgba(0,0,0,0.1);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.menu-combined-row.is-last {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.clickable-thumb {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.clickable-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.menu-combined-body {
+    flex-grow: 1;
+}
+
+.menu-combined-titleline {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.menu-combined-title {
+    color: var(--primary-color);
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+
+.menu-combined-item-price {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.menu-combined-note {
+    font-size: 0.85rem;
+}
+
+.menu-combined-separator {
+    margin: 25px 0;
+    border-top: 2px solid rgba(0,0,0,0.08);
+    position: relative;
+}
+
+.menu-combined-separator span {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f9f9f9;
+    padding: 0 15px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.menu-allergy-note {
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.menu-allergy-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary-color);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.menu-allergy-desc {
+    font-size: 0.7rem;
+    color: var(--text-muted);
 }

@@ -7,12 +7,20 @@ const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS3
 document.addEventListener('DOMContentLoaded', () => {
 
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* =========================================
        1. Splash Screen Loader
        ========================================= */
     const loader = document.getElementById('loader');
     window.addEventListener('load', () => {
+        // 同一セッション内の再訪ではスプラッシュの待ち時間を省略する
+        let splashDelay = 1200;
+        try {
+            if (sessionStorage.getItem('splashShown')) splashDelay = 0;
+            sessionStorage.setItem('splashShown', '1');
+        } catch (e) { /* プライベートモード等でsessionStorage不可でも表示は継続 */ }
+
         setTimeout(() => {
             loader.classList.add('hidden');
             const heroInner = document.querySelector('.hero-inner');
@@ -20,13 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 loader.style.display = 'none';
             }, 800);
-        }, 1200);
+        }, splashDelay);
     });
 
     /* =========================================
        1.5 Hero Slideshow Logic
        ========================================= */
     const initHeroSlider = () => {
+        if (prefersReducedMotion) return;
         const slides = document.querySelectorAll('.hero-slideshow .slide');
         if (slides.length <= 1) return;
 
@@ -43,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
        2. Custom Cursor
        ========================================= */
     const cursor = document.getElementById('cursor');
-    if (!isTouchDevice && cursor) {
+    if (!isTouchDevice && !prefersReducedMotion && cursor) {
+        document.body.classList.add('custom-cursor-active');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
@@ -159,13 +169,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fadeElements.forEach(el => observer.observe(el));
 
-    window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
-        const parallaxImg = document.querySelector('.parallax-slow');
-        if(parallaxImg && scrolled < 2000) {
-            parallaxImg.style.transform = `translateY(${scrolled * 0.05}px)`;
-        }
-    });
+    if (!prefersReducedMotion) {
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const parallaxImg = document.querySelector('.parallax-slow');
+            if(parallaxImg && scrolled < 2000) {
+                parallaxImg.style.transform = `translateY(${scrolled * 0.05}px)`;
+            }
+        });
+    }
 
     /* =========================================
        7. Mobile Menu Toggle
@@ -327,22 +339,32 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================= */
     const menuContainer = document.getElementById('menu-container');
 
+    // スプレッドシートの値をHTMLとして流し込む前にエスケープする（<br>のみ改行用に許可）
+    function sanitize(value) {
+        return value
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+    }
+
     async function loadMenu() {
         if (!menuContainer) return;
-        
+
         // Show Loading state
-        menuContainer.innerHTML = '<div style="text-align:center; padding: 60px; font-size: 1.2rem; color: var(--primary-color);">Now Loading... ☕️</div>';
+        menuContainer.innerHTML = '<div class="menu-loading">Now Loading... ☕️</div>';
 
         try {
             const res = await fetch(SPREADSHEET_CSV_URL);
             const csvText = await res.text();
-            
+
             const lines = csvText.split('\n').filter(line => line.trim().length > 0);
             const data = [];
-            
+
             for(let i=1; i < lines.length; i++) {
                 // Regex for correctly splitting CSV containing quoted commas like "¥1,000"
-                const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
+                const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => sanitize(v.replace(/^"|"$/g, '').trim()));
                 if(row.length >= 5 && row[2]) {
                     data.push({
                         category: row[0],
@@ -360,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             console.error("Failed to load DB", err);
-            menuContainer.innerHTML = '<div style="color:red; text-align:center;">Failed to load menu data. Please try again later.</div>';
+            menuContainer.innerHTML = '<div class="menu-error">Failed to load menu data. Please try again later.</div>';
         }
     }
 
@@ -395,34 +417,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            let combinedHtml = '<div style="text-align: left; margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px;">';
-            
+            let combinedHtml = '<div class="menu-combined">';
+
             // 1. Render Tea Group Header
             if (cupPotItems.length > 0) {
-                combinedHtml += `<div style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: baseline;">
-                                    <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary-color); font-weight: bold;">Tea Selection</span>
-                                    <span style="font-size: 0.9rem; color: var(--primary-color); font-weight: bold;">${commonPrice}</span>
+                combinedHtml += `<div class="menu-combined-header">
+                                    <span class="menu-combined-label">Tea Selection</span>
+                                    <span class="menu-combined-price">${commonPrice}</span>
                                  </div>`;
             }
 
             // 2. Render Cup/Pot Group Items
             cupPotItems.forEach((t, i) => {
-                const border = (i === cupPotItems.length - 1 && specialItems.length === 0) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
-                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}" style="flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;"><img src="${t.img}" style="width: 100%; height: 100%; object-fit: cover;" alt="${t.title}" loading="lazy"></div>` : '';
-                const displayPrice = (formatPrice(t.price) !== commonPrice) ? `<strong style="color: var(--primary-color); font-weight: bold;">${formatPrice(t.price)}</strong>` : '';
-                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong>${displayPrice}</div><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
+                const isLast = (i === cupPotItems.length - 1 && specialItems.length === 0) ? ' is-last' : '';
+                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}"><img src="${t.img}" alt="${t.title}" loading="lazy"></div>` : '';
+                const displayPrice = (formatPrice(t.price) !== commonPrice) ? `<strong class="menu-combined-item-price">${formatPrice(t.price)}</strong>` : '';
+                combinedHtml += `<div class="menu-combined-row${isLast}">${thumbHtml}<div class="menu-combined-body"><div class="menu-combined-titleline"><strong class="menu-combined-title">${t.title}</strong>${displayPrice}</div><span class="menu-combined-note">${t.note}</span></div></div>`;
             });
 
             // 3. Separator if both groups exist
             if (cupPotItems.length > 0 && specialItems.length > 0) {
-                combinedHtml += '<div style="margin: 25px 0; border-top: 2px solid rgba(0,0,0,0.08); position: relative;"><span style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #f9f9f9; padding: 0 15px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary-color); font-weight: bold;">Others</span></div>';
+                combinedHtml += '<div class="menu-combined-separator"><span>Others</span></div>';
             }
 
             // 4. Render Special Items
             specialItems.forEach((t, i) => {
-                const border = (i === specialItems.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
-                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}" style="flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;"><img src="${t.img}" style="width: 100%; height: 100%; object-fit: cover;" alt="${t.title}" loading="lazy"></div>` : '';
-                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong><strong style="color: var(--primary-color); font-weight: bold;">${formatPrice(t.price)}</strong></div><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
+                const isLast = (i === specialItems.length - 1) ? ' is-last' : '';
+                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}"><img src="${t.img}" alt="${t.title}" loading="lazy"></div>` : '';
+                combinedHtml += `<div class="menu-combined-row${isLast}">${thumbHtml}<div class="menu-combined-body"><div class="menu-combined-titleline"><strong class="menu-combined-title">${t.title}</strong><strong class="menu-combined-item-price">${formatPrice(t.price)}</strong></div><span class="menu-combined-note">${t.note}</span></div></div>`;
             });
 
             combinedHtml += '</div>';
@@ -453,28 +475,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (priceCounts[p] > maxCount) { maxCount = priceCounts[p]; commonPrice = formatPrice(p); }
             }
 
-            let combinedHtml = '<div style="text-align: left; margin: 20px 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; background: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px;">';
-            
+            let combinedHtml = '<div class="menu-combined">';
+
             // 1. Kids Group Header
-            combinedHtml += `<div style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: baseline;">
-                                <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--primary-color); font-weight: bold;">Kids Selection</span>
-                                <span style="font-size: 0.9rem; color: var(--primary-color); font-weight: bold;">${commonPrice}</span>
+            combinedHtml += `<div class="menu-combined-header">
+                                <span class="menu-combined-label">Kids Selection</span>
+                                <span class="menu-combined-price">${commonPrice}</span>
                              </div>`;
 
             // 2. Render Items
             kidsItemsRaw.forEach((t, i) => {
-                const border = (i === kidsItemsRaw.length - 1) ? '' : 'border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 15px;';
-                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}" style="flex-shrink: 0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;"><img src="${t.img}" style="width: 100%; height: 100%; object-fit: cover;" alt="${t.title}" loading="lazy"></div>` : '';
-                
+                const isLast = (i === kidsItemsRaw.length - 1) ? ' is-last' : '';
+                const thumbHtml = t.img ? `<div class="clickable-thumb" data-lightbox-src="${t.img}"><img src="${t.img}" alt="${t.title}" loading="lazy"></div>` : '';
+
                 // Only show price if it differs from commonPrice
-                const displayPrice = (formatPrice(t.price) !== commonPrice) ? `<strong style="color: var(--primary-color); font-weight: bold;">${formatPrice(t.price)}</strong>` : '';
-                
-                combinedHtml += `<div style="${border}; display: flex; gap: 20px; align-items: center;">${thumbHtml}<div style="flex-grow: 1;"><div style="display: flex; justify-content: space-between; gap: 10px;"><strong style="color: var(--primary-color); font-size: 1.05rem;">${t.title}</strong>${displayPrice}</div><span style="font-size: 0.85rem;">${t.note}</span></div></div>`;
+                const displayPrice = (formatPrice(t.price) !== commonPrice) ? `<strong class="menu-combined-item-price">${formatPrice(t.price)}</strong>` : '';
+
+                combinedHtml += `<div class="menu-combined-row${isLast}">${thumbHtml}<div class="menu-combined-body"><div class="menu-combined-titleline"><strong class="menu-combined-title">${t.title}</strong>${displayPrice}</div><span class="menu-combined-note">${t.note}</span></div></div>`;
             });
 
             // Allergy notice at the bottom
-            combinedHtml += '<div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(0,0,0,0.1); text-align: center;"><span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); font-weight: bold; display: block; margin-bottom: 4px;">Rice Flour & Allergy-Friendly</span><span style="font-size: 0.7rem; color: var(--text-muted);">米粉を使用したアレルギー配慮メニューです</span></div>';
-            
+            combinedHtml += '<div class="menu-allergy-note"><span class="menu-allergy-title">Rice Flour & Allergy-Friendly</span><span class="menu-allergy-desc">米粉を使用したアレルギー配慮メニューです</span></div>';
+
             combinedHtml += '</div>';
 
             kidsItems = [{
@@ -497,14 +519,14 @@ document.addEventListener('DOMContentLoaded', () => {
         function renderGroup(title, items, groupId) {
             if (items.length === 0) return;
             
-            let html = `<div class="menu-group" id="group-${groupId}" style="display: contents;">`;
+            let html = `<div class="menu-group" id="group-${groupId}">`;
             if (title) {
                 const parts = title.split(' / ');
                 const mainTitle = parts[0].trim();
-                const subTitle = parts[1] ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; font-weight: normal; letter-spacing: 0.2em; text-transform: none;">— ${parts[1].trim()} —</div>` : '';
-                
-                html += `<div class="menu-section-title content-fade" style="grid-column: 1 / -1; width: 100%; text-align: center; margin: 80px 0 40px;">
-                            <h2 style="font-family: var(--font-en); font-size: 1.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary-color); margin: 0; padding-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); display: inline-block; min-width: 200px;">
+                const subTitle = parts[1] ? `<div class="menu-section-subtitle">— ${parts[1].trim()} —</div>` : '';
+
+                html += `<div class="menu-section-title content-fade">
+                            <h2>
                                 ${mainTitle}
                                 ${subTitle}
                             </h2>
@@ -522,9 +544,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     : '';
 
                 const noteBlock = item.note
-                    ? `<div class="menu-note" style="font-size: 0.9rem; margin-top: 8px;">${item.note}</div>`
+                    ? `<div class="menu-note">${item.note}</div>`
                     : '';
-                    
+
                 const extraClass = (groupId === 't2' || groupId === 'kids' || groupId === 'limited') ? ' span-2' : '';
 
                 html += `
@@ -532,16 +554,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${imageBlock}
                         <div class="menu-info">
                             ${item.category === 't2' || item.category === 'kids'
-                                ? `<div style="text-align: center; margin-bottom: 15px;">
-                                     <h4 style="margin: 0 0 4px 0;">${item.title}</h4>
-                                     <p style="font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em; margin: 0; opacity: 0.8;">${item.desc}</p>
+                                ? `<div class="menu-item-centered">
+                                     <h4>${item.title}</h4>
+                                     <p>${item.desc}</p>
                                    </div>`
                                 : `<h4>${item.title}</h4>
-                                   <p style="font-family: var(--font-en); font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 4px;">${item.desc}</p>`
+                                   <p class="menu-item-desc">${item.desc}</p>`
                             }
                             ${noteBlock}
-                            ${(!['t2', 'kids'].includes(item.category)) 
-                                ? `<p class="price" style="margin-top:8px; font-weight:bold; color:var(--primary-color);">${formatPrice(item.price)}</p>` 
+                            ${(!['t2', 'kids'].includes(item.category))
+                                ? `<p class="price">${formatPrice(item.price)}</p>`
                                 : ''
                             }
                         </div>
@@ -665,6 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
        12. Infinite Scroll Marquee with Manual Interaction
        ========================================= */
     const initMarqueeScroll = () => {
+        if (prefersReducedMotion) return; // 自動スクロールは無効化（手動スクロールは可能）
         const marquee = document.querySelector('.marquee');
         const content = marquee?.querySelector('.marquee-content');
         if (!marquee || !content) return;

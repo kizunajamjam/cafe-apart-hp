@@ -36,7 +36,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: none; /* Hide default cursor for custom cursor */
+}
+
+/* カスタムカーソル有効時のみ標準カーソルを隠す（JS無効時はOSカーソルが残る） */
+body.custom-cursor-active,
+body.custom-cursor-active * {
+    cursor: none;
 }
 
 body {
@@ -54,7 +59,7 @@ a, button {
     color: inherit;
     border: none;
     background: none;
-    cursor: none;
+    cursor: pointer;
 }
 
 img {
@@ -69,6 +74,7 @@ ul {
 
 /* Custom Cursor */
 .cursor {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -88,6 +94,20 @@ ul {
     height: 50px;
     background-color: rgba(212, 163, 115, 0.2);
     border: 1px solid var(--accent-color);
+}
+
+body.custom-cursor-active .cursor {
+    display: block;
+}
+
+/* 動きを抑えたい設定のユーザーにはアニメーションを無効化する */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 /* Splash Loader */
