@@ -162,6 +162,7 @@
         </section>
 
         <!-- Message of Sympathy -->
+        <!-- 掲載期限は下の SYMPATHY_HIDE_AFTER で設定（日本時間のその日いっぱいまで表示） -->
         <section id="sympathy" class="sympathy section">
             <div class="container">
                 <div class="sympathy-inner content-fade">
@@ -172,6 +173,19 @@
                 </div>
             </div>
         </section>
+        <script>
+            (function () {
+                /* この日付（日本時間）の終わりを過ぎると、お見舞いメッセージは表示されなくなります。
+                   掲載をやめるときは日付を過去にするか、上の section ごと削除してください。 */
+                var SYMPATHY_HIDE_AFTER = '2026-09-30';
+
+                var section = document.getElementById('sympathy');
+                var limit = new Date(SYMPATHY_HIDE_AFTER + 'T23:59:59+09:00');
+                if (section && !isNaN(limit.getTime()) && Date.now() > limit.getTime()) {
+                    section.remove();
+                }
+            })();
+        </script>
 
         <!-- 2nd Anniversary Tote Bag Announcement -->
         <section id="anniversary" class="anniversary section bg-sand">
@@ -184,7 +198,7 @@
                             おかげさまで cafe apart は8月で2周年を迎えます。<br>
                             この度apartオリジナルロゴ入りの<br class="pc-only">
                             トートバッグを作りました。<br>
-                            ネイビー（¥1,680）と<br>
+                            ネイビー（¥1,580）と<br>
                             ナチュラル（¥1,380）の2色展開です。<br>
                             無双のミニトート、是非お買い求めください！
                         </p>
