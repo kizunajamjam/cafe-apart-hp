@@ -611,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function attachDynamicEvents() {
         // Attach Lightbox logic to new images and thumbnails
-        const triggers = document.querySelectorAll('.img-wrapper img, .clickable-thumb, .gallery-img, .anniversary-photos img');
+        const triggers = document.querySelectorAll('.img-wrapper img, .clickable-thumb, .gallery-img');
         triggers.forEach(el => {
             el.addEventListener('click', (e) => {
                 e.stopPropagation();
