@@ -484,7 +484,6 @@ body.custom-cursor-active .cursor {
     }
     .sympathy-inner {
         padding: 22px 4px;
-        text-align: left;
     }
     .sympathy-text {
         font-size: 0.9rem;
@@ -521,7 +520,8 @@ body.custom-cursor-active .cursor {
 
 .concept-images {
     position: relative;
-    height: 600px;
+    /* 幅に応じて高さが伸びるので、中の絶対配置画像がはみ出さない */
+    aspect-ratio: 5 / 6;
 }
 
 .concept-images img {
@@ -971,7 +971,7 @@ body.custom-cursor-active .cursor {
     }
     
     .concept-images {
-        height: 400px;
+        aspect-ratio: 1 / 1.05;
         order: -1;
         margin-bottom: 40px;
     }
