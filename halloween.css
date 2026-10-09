@@ -1,0 +1,84 @@
+/* =========================================================================
+   cafe apart - Halloween (10月限定のこっそり演出)
+   body.halloween が付いている間だけ有効。付与は halloween.js が行う。
+   ========================================================================= */
+
+/* スクロールバーをかぼちゃ色→夜空の紫に */
+body.halloween #progress-bar {
+    background: linear-gradient(90deg, #e8862a, #7b4fa0);
+}
+
+/* フッターの小さなジャック・オー・ランタン */
+.hw-pumpkin {
+    display: inline-block;
+    width: 1.1em;
+    height: 1.1em;
+    margin-left: 0.4em;
+    vertical-align: -0.2em;
+    opacity: 0.85;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.hw-pumpkin:hover {
+    transform: rotate(-12deg) scale(1.25);
+}
+.hw-pumpkin .hw-face {
+    transition: fill 0.4s ease;
+}
+.hw-pumpkin:hover .hw-face {
+    fill: #ffd76a;
+}
+
+/* ヒーロー上をたまに横切るコウモリ */
+.hw-bat {
+    position: absolute;
+    top: 18%;
+    left: -60px;
+    width: 34px;
+    height: auto;
+    color: rgba(30, 24, 40, 0.75);
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+}
+.hw-bat.flying {
+    animation: hw-bat-fly 7s linear forwards;
+}
+.hw-bat.flying svg {
+    animation: hw-bat-flap 0.18s ease-in-out infinite alternate;
+    transform-origin: 50% 40%;
+}
+@keyframes hw-bat-fly {
+    0%   { transform: translate(0, 0) rotate(4deg);            opacity: 0; }
+    8%   { opacity: 1; }
+    25%  { transform: translate(28vw, -40px) rotate(-6deg); }
+    50%  { transform: translate(55vw, 25px) rotate(5deg); }
+    75%  { transform: translate(82vw, -30px) rotate(-4deg); }
+    92%  { opacity: 1; }
+    100% { transform: translate(calc(100vw + 120px), 10px) rotate(3deg); opacity: 0; }
+}
+@keyframes hw-bat-flap {
+    from { transform: scaleY(1); }
+    to   { transform: scaleY(0.55); }
+}
+
+/* トップへ戻るボタンの後ろから、ホバーするとおばけがのぞく */
+.hw-ghost {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: auto;
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+    transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+.back-to-top:hover .hw-ghost {
+    transform: translate(-145%, -110%) rotate(-14deg) scale(1);
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hw-bat { display: none; }
+}
