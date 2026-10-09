@@ -82,3 +82,138 @@ body.halloween #progress-bar {
 @media (prefers-reduced-motion: reduce) {
     .hw-bat { display: none; }
 }
+
+/* 文字を選択したときの色もハロウィン仕様に */
+body.halloween ::selection {
+    background: #e8862a;
+    color: #fff;
+}
+
+/* 読み込み中のくるくるをかぼちゃ色に */
+body.halloween .spinner {
+    border-top-color: #e8862a;
+    border-right-color: #7b4fa0;
+}
+
+/* カスタムカーソルもオレンジに
+   （カーソルは mix-blend-mode: difference なので、補色を指定すると明るい背景の上でオレンジに見える） */
+body.halloween .cursor {
+    background-color: rgba(23, 121, 213, 0.6);
+}
+body.halloween .cursor.hover {
+    background-color: rgba(23, 121, 213, 0.2);
+    border-color: #1779d5;
+}
+
+/* ロゴにちょこんと乗った魔女の帽子 */
+body.halloween .header .logo {
+    position: relative;
+    display: inline-block;
+}
+.hw-hat {
+    position: absolute;
+    top: -9px;
+    left: -6px;
+    width: 22px;
+    transform: rotate(-18deg);
+    transform-origin: 50% 100%;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.hw-hat svg {
+    display: block;
+}
+.logo:hover .hw-hat {
+    transform: rotate(-30deg) translateY(-6px);
+}
+
+/* MENU 見出しからぶら下がるクモ */
+.hw-spider {
+    position: absolute;
+    top: -46px;
+    right: -26px;
+    width: 18px;
+    pointer-events: none;
+    transform-origin: 50% 0;
+    animation: hw-spider-sway 4s ease-in-out infinite;
+}
+.hw-spider::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 46px;
+    margin: 0 auto;
+    background: rgba(43, 34, 56, 0.35);
+}
+.hw-spider svg {
+    display: block;
+    width: 18px;
+    margin-top: -4px;
+}
+@keyframes hw-spider-sway {
+    0%, 100% { transform: rotate(5deg); }
+    50%      { transform: rotate(-5deg) translateY(4px); }
+}
+
+/* Access カードの右上にクモの巣 */
+body.halloween .info-card {
+    position: relative;
+}
+.hw-web {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 64px;
+    color: rgba(44, 62, 80, 0.3);
+    pointer-events: none;
+}
+.hw-web svg {
+    display: block;
+}
+
+/* Instagram の写真に重なるおばけ */
+.hw-ig-ghost {
+    width: 20px;
+    display: inline-block;
+    transform: translateY(6px);
+    transition: transform 0.5s ease 0.1s;
+}
+.ig-item:hover .hw-ig-ghost {
+    transform: translateY(-2px);
+}
+
+/* ニュースティッカーの一言 */
+.hw-news {
+    color: #e8862a;
+}
+
+/* ギャラリーの上を歩く黒猫 */
+body.halloween .gallery {
+    position: relative;
+}
+.hw-cat {
+    position: absolute;
+    top: 8px;
+    left: -60px;
+    width: 40px;
+    pointer-events: none;
+    z-index: 2;
+    animation: hw-cat-walk 38s linear infinite;
+}
+.hw-cat svg {
+    display: block;
+    animation: hw-cat-step 0.5s ease-in-out infinite alternate;
+}
+@keyframes hw-cat-walk {
+    0%   { transform: translateX(0); }
+    60%  { transform: translateX(calc(100vw + 120px)); }
+    100% { transform: translateX(calc(100vw + 120px)); }
+}
+@keyframes hw-cat-step {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-1.5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hw-cat { display: none; }
+}
