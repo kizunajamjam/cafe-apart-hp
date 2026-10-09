@@ -4,6 +4,24 @@
 
 const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS3obFx_eeJzUPLGj1btfJrzDKeo4tq9XUJcnB3yKRqMsxK1uw3z4_o4m7fMVkQbg2iFf3BD_EtBoic/pub?output=csv";
 
+// 期間限定メニューの一時的な差し替え（スプレッドシートを編集できない間の対応）
+// until（日本時間）までは、スプレッドシートの期間限定メニューの代わりに items を表示する。
+// 期限を過ぎるとスプレッドシートの内容に自動で戻る。不要になったら until を過去の日付にするか、この設定ごと削除する。
+const LIMITED_MENU_OVERRIDE = {
+    until: '2026-10-31T23:59:59+09:00',
+    items: [
+        {
+            category: 'limited',
+            img: 'assets/images/halloween-ghost-parfait.jpg',
+            title: 'ハロウィン限定パフェ',
+            desc: '『食べるのが少々難しいゴースト』',
+            price: '¥1,400',
+            note: 'さつまいも・栗・さつまいもと栗のタルト・シリアル・チョコソース・ベリーソース・マーブルチョコ・クレープ生地・バニラアイス',
+            memo: ''
+        }
+    ]
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -349,6 +367,13 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/&lt;br\s*\/?&gt;/gi, '<br>');
     }
 
+    function applyLimitedOverride(data) {
+        const until = new Date(LIMITED_MENU_OVERRIDE.until).getTime();
+        if (isNaN(until) || Date.now() > until) return data;
+        const isLimited = item => (item.category || '').toLowerCase() === 'limited' || (item.note && item.note.includes('期間限定'));
+        return data.filter(item => !isLimited(item)).concat(LIMITED_MENU_OVERRIDE.items);
+    }
+
     async function loadMenu() {
         if (!menuContainer) return;
 
@@ -378,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            renderMenuItems(data);
+            renderMenuItems(applyLimitedOverride(data));
 
         } catch (err) {
             console.error("Failed to load DB", err);
