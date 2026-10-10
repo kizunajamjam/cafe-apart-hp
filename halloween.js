@@ -1,6 +1,6 @@
 /**
  * cafe apart - Halloween
- * 下の期間（日本時間）だけ、サイトにハロウィンの飾りと動きを追加する。
+ * 下の期間（日本時間）だけ、サイトに控えめなハロウィンの飾りと動きを追加する。
  * 期間を過ぎると何も表示されなくなり、いつものサイトに戻る。
  * 完全に片付けるときは halloween.js / halloween.css と、index.html でそれを読み込んでいる2行を削除する。
  */
@@ -62,18 +62,6 @@
         '<svg viewBox="0 0 48 30" fill="#1f1a26" aria-hidden="true">' +
         '<path d="M38 6l2-5 3 5c2 1 3 3 3 6 0 3-2 5-5 5h-1l-1 11h-3l-1-8H17l-2 8h-3l1-9c-3-1-5-4-5-8 0-1-1-3-4-4C1 6 1 3 3 2c0 3 2 4 4 5 2 1 3 2 4 3h21c1-2 3-4 6-4z"/>' +
         '<circle cx="40" cy="10" r="1" fill="#f3c74a"/><circle cx="43.5" cy="10" r="1" fill="#f3c74a"/>' +
-        '</svg>';
-
-    var WITCH_SVG =
-        '<svg viewBox="0 -14 130 84" fill="#1f1a26" aria-hidden="true">' +
-        '<path d="M8 52 100 38" stroke="#5a3a22" stroke-width="3.5" stroke-linecap="round"/>' +
-        '<path d="M96 34l26-8-6 12 10 4-12 4 6 10-24-12z" fill="#c9962e"/>' +
-        '<path d="M44 46 66 16l16 28z"/>' +
-        '<path d="M48 44Q30 26 18 40q14-2 30 6z"/>' +
-        '<circle cx="68" cy="13" r="7"/>' +
-        '<path d="M56 10l26-3-3 3z"/>' +
-        '<path d="M62 9 82 6 74-12z"/>' +
-        '<path d="M62 30 78 44" stroke="#1f1a26" stroke-width="4" stroke-linecap="round"/>' +
         '</svg>';
 
     function el(tag, className, html) {
@@ -143,7 +131,7 @@
 
     function addHeroPumpkins(hero) {
         var patch = el('div', 'hw-patch');
-        [['hw-pk-big', 0], ['hw-pk-small', -0.8], ['hw-pk-tiny', -1.6]].forEach(function (cfg) {
+        [['hw-pk-big', 0], ['hw-pk-small', -0.8]].forEach(function (cfg) {
             var pk = el('button', 'hw-pumpkin ' + cfg[0], pumpkinSVG());
             pk.type = 'button';
             pk.removeAttribute('aria-hidden');
@@ -157,7 +145,7 @@
     function addBats(hero) {
         if (reduceMotion) return;
         var bats = [];
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 3; i++) {
             var bat = el('div', 'hw-bat', BAT_SVG);
             hero.appendChild(bat);
             bats.push(bat);
@@ -169,7 +157,7 @@
             bats.forEach(function (bat, i) {
                 bat.classList.remove('flying', 'reverse');
                 bat.style.top = (baseTop + (Math.random() - 0.3) * 18) + '%';
-                bat.style.setProperty('--size', (38 + Math.random() * 36).toFixed(0) + 'px');
+                bat.style.setProperty('--size', (30 + Math.random() * 16).toFixed(0) + 'px');
                 bat.style.animationDelay = (i * 0.35 + Math.random() * 0.3).toFixed(2) + 's';
                 void bat.offsetWidth; // アニメーションを再始動させる
                 bat.classList.add('flying');
@@ -177,45 +165,11 @@
             });
         };
         setTimeout(flyFlock, 2500);
-        setInterval(flyFlock, 14000);
-    }
-
-    function addWitch() {
-        if (reduceMotion) return;
-        var witch = el('div', 'hw-witch', WITCH_SVG);
-        document.body.appendChild(witch);
-        var fly = function () {
-            if (document.hidden) return;
-            witch.style.top = (14 + Math.random() * 30) + 'vh';
-            witch.classList.remove('flying');
-            void witch.offsetWidth;
-            witch.classList.add('flying');
-        };
-        setTimeout(fly, 9000);
-        setInterval(fly, 32000);
-    }
-
-    function addFloatingGhosts() {
-        if (reduceMotion) return;
-        var layer = el('div', 'hw-ghost-layer');
-        [
-            { x: '4%', size: 64, dur: 22, delay: 0 },
-            { x: '88%', size: 52, dur: 26, delay: -9 },
-            { x: '10%', size: 40, dur: 30, delay: -18 },
-            { x: '80%', size: 72, dur: 34, delay: -25 }
-        ].forEach(function (g) {
-            var ghost = el('div', 'hw-float-ghost', GHOST_SVG);
-            ghost.style.left = g.x;
-            ghost.style.setProperty('--size', g.size + 'px');
-            ghost.style.animationDuration = g.dur + 's';
-            ghost.style.animationDelay = g.delay + 's';
-            layer.appendChild(ghost);
-        });
-        document.body.appendChild(layer);
+        setInterval(flyFlock, 30000);
     }
 
     function addSpiders() {
-        ['#concept .section-title', '#menu .section-title', '#instagram .section-title', '#access .section-title']
+        ['#menu .section-title']
             .forEach(function (sel, i) {
                 var title = document.querySelector(sel);
                 if (!title) return;
@@ -226,7 +180,7 @@
     }
 
     function addWebs() {
-        [['#concept', 'hw-web-tl'], ['#instagram', 'hw-web-tr'], ['.info-card', 'hw-web-tr hw-web-card'], ['#menu', 'hw-web-tl']]
+        [['.info-card', 'hw-web-tr hw-web-card']]
             .forEach(function (cfg) {
                 var host = document.querySelector(cfg[0]);
                 if (!host) return;
@@ -235,25 +189,11 @@
             });
     }
 
-    function addMenuPumpkin() {
-        var menu = document.getElementById('menu');
-        if (!menu) return;
-        var corner = el('div', 'hw-menu-corner');
-        var ghost = el('div', 'hw-peek-ghost', GHOST_SVG);
-        var pk = el('button', 'hw-pumpkin hw-pk-menu', pumpkinSVG());
-        pk.type = 'button';
-        pk.removeAttribute('aria-hidden');
-        pk.setAttribute('aria-label', 'Trick or Treat!');
-        corner.appendChild(ghost);
-        corner.appendChild(pk);
-        menu.appendChild(corner);
-    }
-
     function addFooter() {
         var footer = document.querySelector('.footer');
         if (!footer) return;
         var row = el('div', 'hw-footer-pumpkins');
-        [56, 84, 44, 70, 50, 92, 46, 64].forEach(function (size, i) {
+        [40, 56, 40].forEach(function (size, i) {
             var pk = el('button', 'hw-pumpkin hw-pk-footer', pumpkinSVG());
             pk.type = 'button';
             pk.removeAttribute('aria-hidden');
@@ -273,15 +213,12 @@
     function addTicker() {
         document.querySelectorAll('.news-content').forEach(function (content) {
             var items = content.querySelectorAll('.news-item');
-            // 4件ごとの繰り返しのまとまりそれぞれに同じだけ足す（ループの見た目を崩さないため）
+            // 4件ごとの繰り返しのまとまりそれぞれに1件ずつ足す（ループの見た目を崩さないため）
             for (var i = 3; i < items.length; i += 4) {
                 var a = el('span', 'news-item hw-news');
                 a.removeAttribute('aria-hidden');
                 a.textContent = '🎃 Happy Halloween 🎃';
-                var b = el('span', 'news-item hw-news');
-                b.removeAttribute('aria-hidden');
-                b.textContent = '👻 Trick or Treat? 👻';
-                items[i].after(a, b);
+                items[i].after(a);
             }
         });
     }
@@ -328,11 +265,8 @@
                 void pk.offsetWidth;
                 pk.classList.add('hw-jump');
                 var r = pk.getBoundingClientRect();
-                burst(r.left + r.width / 2, r.top + r.height / 3, 16);
-                return;
+                burst(r.left + r.width / 2, r.top + r.height / 3, 10);
             }
-            // それ以外の場所をクリックしても、ちょっとだけお菓子が飛ぶ
-            burst(e.clientX, e.clientY, 5);
         });
     }
 
@@ -347,16 +281,12 @@
 
         var hero = document.querySelector('.hero');
         if (hero) {
-            hero.appendChild(el('div', 'hw-hero-night'));
             addGarland(hero);
             addHeroPumpkins(hero);
             addBats(hero);
         }
-        addWitch();
-        addFloatingGhosts();
         addSpiders();
         addWebs();
-        addMenuPumpkin();
         addFooter();
         addTicker();
         addMisc();

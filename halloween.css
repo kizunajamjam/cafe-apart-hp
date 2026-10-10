@@ -7,15 +7,11 @@
 :root {
     --hw-orange: #f28b25;
     --hw-purple: #6b3fa0;
-    --hw-night: #2a1b3d;
-    --hw-ink: #1f1a26;
+        --hw-ink: #1f1a26;
 }
 
 /* ---------- 全体の色 ---------- */
 
-body.halloween #progress-container {
-    height: 5px;
-}
 body.halloween #progress-bar {
     background: linear-gradient(90deg, var(--hw-orange), var(--hw-purple));
 }
@@ -23,12 +19,6 @@ body.halloween #progress-bar {
 body.halloween ::selection {
     background: var(--hw-orange);
     color: #fff;
-}
-
-body.halloween .section-title::after {
-    background-color: var(--hw-orange);
-    height: 2px;
-    width: 60px;
 }
 
 /* カーソルは mix-blend-mode: difference なので、補色を指定すると明るい背景の上でオレンジに見える */
@@ -91,27 +81,16 @@ body.halloween .cursor.hover {
 
 /* ---------- ヒーロー ---------- */
 
-/* 写真に夜の色をかぶせる */
-.hw-hero-night {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    background:
-        radial-gradient(ellipse at 15% 100%, rgba(242, 139, 37, 0.35), transparent 55%),
-        linear-gradient(180deg, rgba(42, 27, 61, 0.55) 0%, rgba(42, 27, 61, 0.15) 45%, rgba(42, 27, 61, 0.35) 100%);
-}
-
 /* HAPPY HALLOWEEN のガーランド */
 .hw-garland {
     position: absolute;
     top: 88px;
     left: 50%;
-    width: min(94vw, 980px);
+    width: min(72vw, 600px);
     transform: translateX(-50%);
     z-index: 9;
     pointer-events: none;
-    --flag: clamp(20px, 5.4vw, 58px);
+    --flag: clamp(16px, 3.4vw, 34px);
 }
 .hw-garland-string {
     position: absolute;
@@ -139,7 +118,7 @@ body.halloween .cursor.hover {
     transform-origin: 50% 0;
     animation: hw-swing 2.6s ease-in-out infinite;
     animation-delay: var(--delay, 0s);
-    box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.25);
+    opacity: 0.92;
 }
 .hw-flag:nth-child(3n+1) {
     color: var(--hw-ink);
@@ -150,8 +129,8 @@ body.halloween .cursor.hover {
     display: block;
 }
 @keyframes hw-swing {
-    0%, 100% { transform: rotate(-7deg); }
-    50%      { transform: rotate(7deg); }
+    0%, 100% { transform: rotate(-4deg); }
+    50%      { transform: rotate(4deg); }
 }
 
 /* 左下のかぼちゃ畑 */
@@ -163,9 +142,8 @@ body.halloween .cursor.hover {
     display: flex;
     align-items: flex-end;
 }
-.hw-pk-big   { width: clamp(120px, 19vw, 240px); }
-.hw-pk-small { width: clamp(80px, 12vw, 150px); margin-left: -4%; }
-.hw-pk-tiny  { width: clamp(52px, 7vw, 90px); margin-left: -2%; }
+.hw-pk-big   { width: clamp(72px, 9vw, 120px); }
+.hw-pk-small { width: clamp(48px, 6vw, 76px); margin-left: -6%; }
 
 /* コウモリの群れ */
 .hw-bat {
@@ -207,71 +185,6 @@ body.halloween .cursor.hover {
     to   { transform: scaleY(0.5); }
 }
 
-/* ニュースティッカーを夜の色に */
-body.halloween .news-ticker {
-    background: var(--hw-night);
-    border-top: 2px solid var(--hw-orange);
-}
-.hw-news {
-    color: var(--hw-orange);
-    font-weight: 700;
-}
-
-/* ---------- ページ全体を飛ぶもの ---------- */
-
-/* ほうきに乗った魔女 */
-.hw-witch {
-    position: fixed;
-    left: 0;
-    width: clamp(110px, 14vw, 180px);
-    z-index: 90;
-    pointer-events: none;
-    opacity: 0;
-}
-.hw-witch.flying {
-    animation: hw-witch-fly 9s ease-in-out forwards;
-}
-.hw-witch svg {
-    display: block;
-    filter: drop-shadow(0 0 12px rgba(242, 139, 37, 0.55));
-}
-@keyframes hw-witch-fly {
-    0%   { transform: translate(-200px, 40px) rotate(6deg); opacity: 1; }
-    30%  { transform: translate(28vw, -30px) rotate(-4deg); }
-    60%  { transform: translate(60vw, 30px) rotate(5deg); }
-    100% { transform: translate(calc(100vw + 200px), -60px) rotate(-6deg); opacity: 1; }
-}
-
-/* 下から上へふわふわ上がっていくおばけ */
-.hw-ghost-layer {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    pointer-events: none;
-    overflow: hidden;
-}
-.hw-float-ghost {
-    position: absolute;
-    top: 100%;
-    width: var(--size, 56px);
-    opacity: 0.85;
-    animation-name: hw-ghost-rise;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-}
-.hw-float-ghost svg {
-    display: block;
-    animation: hw-ghost-sway 3s ease-in-out infinite;
-}
-@keyframes hw-ghost-rise {
-    0%   { transform: translateY(0); }
-    100% { transform: translateY(calc(-100vh - 200px)); }
-}
-@keyframes hw-ghost-sway {
-    0%, 100% { transform: translateX(-20px) rotate(-8deg); }
-    50%      { transform: translateX(20px) rotate(8deg); }
-}
-
 /* クリックで飛び出すお菓子 */
 .hw-particle {
     position: fixed;
@@ -287,9 +200,9 @@ body.halloween .news-ticker {
 /* 見出しからぶら下がって上下するクモ */
 .hw-spider {
     position: absolute;
-    top: -150px;
+    top: -96px;
     right: -44px;
-    width: 32px;
+    width: 24px;
     pointer-events: none;
     transform-origin: 50% 0;
     animation: hw-spider-yoyo 3.6s ease-in-out infinite;
@@ -303,13 +216,13 @@ body.halloween .news-ticker {
     content: '';
     display: block;
     width: 1px;
-    height: 150px;
+    height: 96px;
     margin: 0 auto;
     background: linear-gradient(transparent, rgba(43, 34, 56, 0.5));
 }
 .hw-spider svg {
     display: block;
-    width: 32px;
+    width: 24px;
     margin-top: -6px;
 }
 @keyframes hw-spider-yoyo {
@@ -325,7 +238,7 @@ body.halloween .news-ticker {
     position: absolute;
     top: 0;
     width: clamp(100px, 14vw, 180px);
-    color: rgba(44, 62, 80, 0.35);
+    color: rgba(44, 62, 80, 0.25);
     pointer-events: none;
     z-index: 1;
 }
@@ -333,38 +246,11 @@ body.halloween .news-ticker {
     display: block;
 }
 .hw-web-tr { right: 0; }
-.hw-web-tl { left: 0; transform: scaleX(-1); }
 .hw-web-card { width: clamp(80px, 10vw, 120px); }
-
-/* MENU の右下：かぼちゃと、その後ろからのぞくおばけ */
-body.halloween #menu {
-    position: relative;
-}
-.hw-menu-corner {
-    position: absolute;
-    right: 3%;
-    bottom: 10px;
-    z-index: 6;
-    width: clamp(90px, 12vw, 150px);
-}
-.hw-peek-ghost {
-    position: absolute;
-    left: -38%;
-    bottom: 30%;
-    width: 55%;
-    animation: hw-peek 4s ease-in-out infinite;
-}
-.hw-peek-ghost svg { display: block; }
-@keyframes hw-peek {
-    0%, 30%, 100% { transform: translate(60%, 20%) rotate(10deg); opacity: 0; }
-    45%, 80%      { transform: translate(0, 0) rotate(-12deg); opacity: 1; }
-}
 
 /* フッターに並ぶかぼちゃ */
 body.halloween .footer {
     position: relative;
-    background: linear-gradient(180deg, var(--hw-night), var(--primary-color));
-    padding-top: 50px;
 }
 .hw-footer-pumpkins {
     position: absolute;
@@ -372,7 +258,8 @@ body.halloween .footer {
     right: 0;
     bottom: calc(100% - 18px);
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    gap: clamp(12px, 4vw, 40px);
     align-items: flex-end;
     padding: 0 4%;
     pointer-events: none;
@@ -383,16 +270,10 @@ body.halloween .footer {
 }
 .hw-footer-msg {
     font-family: 'Creepster', var(--font-en);
-    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-size: clamp(1.3rem, 3vw, 1.7rem);
     letter-spacing: 0.06em;
     color: var(--hw-orange);
-    text-shadow: 0 0 14px rgba(242, 139, 37, 0.6);
-    margin-bottom: 10px;
-    animation: hw-glow 2.4s ease-in-out infinite;
-}
-@keyframes hw-glow {
-    0%, 100% { text-shadow: 0 0 10px rgba(242, 139, 37, 0.4); }
-    50%      { text-shadow: 0 0 24px rgba(242, 139, 37, 0.9); }
+    margin-bottom: 6px;
 }
 
 /* ---------- 小物 ---------- */
@@ -419,29 +300,25 @@ body.halloween .header .logo {
     90%           { transform: rotate(-12deg); }
 }
 
-/* トップへ戻るボタン：かぼちゃ色にして、おばけがつかまる */
-body.halloween .back-to-top {
-    background-color: var(--hw-orange);
-}
-body.halloween .back-to-top:hover {
-    background-color: var(--hw-purple);
-}
+/* トップへ戻るボタン：ホバーすると後ろからおばけがのぞく */
 .hw-btt-ghost {
     position: absolute;
-    top: -30px;
-    left: -22px;
-    width: 34px;
+    top: -26px;
+    left: -18px;
+    width: 30px;
     pointer-events: none;
-    animation: hw-bob 2s ease-in-out infinite;
+    opacity: 0;
+    transform: translate(14px, 18px) scale(0.6);
+    transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+.back-to-top:hover .hw-btt-ghost {
+    opacity: 1;
+    transform: rotate(-14deg);
 }
 .back-to-top .hw-btt-ghost svg {
     display: block;
     width: 100%;
     height: auto;
-}
-@keyframes hw-bob {
-    0%, 100% { transform: translateY(0) rotate(-10deg); }
-    50%      { transform: translateY(-6px) rotate(-16deg); }
 }
 
 /* Instagram の写真に重なるおばけ */
@@ -502,14 +379,10 @@ body.halloween .spinner {
 /* ---------- スマホ ---------- */
 
 @media (max-width: 768px) {
-    .hw-garland { top: 74px; --flag: 6vw; }
-    .hw-patch { bottom: 38px; left: 2%; }
-    .hw-pk-big   { width: 104px; }
-    .hw-pk-small { width: 68px; }
-    .hw-pk-tiny  { width: 44px; }
-    .hw-float-ghost { width: calc(var(--size, 56px) * 0.7); }
-    .hw-spider { right: -36px; }
-    .hw-spider-left { left: -36px; }
-    .hw-menu-corner { bottom: 0; }
-    .hw-btt-ghost { width: 28px; top: -24px; left: -18px; }
+    .hw-garland { top: 76px; width: 88vw; --flag: 4.6vw; }
+    .hw-patch { bottom: 44px; left: 3%; }
+    .hw-pk-big   { width: 68px; }
+    .hw-pk-small { width: 44px; }
+    .hw-spider { right: -30px; }
+    .hw-spider-left { left: -30px; }
 }
