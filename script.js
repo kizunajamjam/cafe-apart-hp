@@ -365,7 +365,8 @@ document.addEventListener('DOMContentLoaded', () => {
             for(let i=1; i < lines.length; i++) {
                 // Regex for correctly splitting CSV containing quoted commas like "¥1,000"
                 const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => sanitize(v.replace(/^"|"$/g, '').trim()));
-                if(row.length >= 5 && row[2]) {
+                // カテゴリ (A列) が空の行は表示しない (スプレッドシートでカテゴリを消せば非表示にできる)
+                if(row.length >= 5 && row[0] && row[2]) {
                     data.push({
                         category: row[0],
                         img: row[1] || "",
