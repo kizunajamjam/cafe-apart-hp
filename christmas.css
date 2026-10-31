@@ -1,0 +1,197 @@
+/* =========================================================================
+   cafe apart - Christmas
+   body.christmas や xm- で始まるパーツは、期間中だけ christmas.js が追加する。
+   期間外は何も追加されないので、このファイルは読み込まれても見た目に影響しない。
+   色は落ち着いたネイビー・シャンパンゴールド・シルバー・深いグリーンだけ。
+   ========================================================================= */
+
+:root {
+    --xm-gold: #c2a878;
+    --xm-silver: #d9dde2;
+    --xm-pine: #3f6457;
+    --xm-ink: #1d2a35;
+}
+
+/* ---------- 全体の色 ---------- */
+
+body.christmas #progress-bar {
+    background: linear-gradient(90deg, var(--xm-gold), var(--xm-silver));
+}
+
+body.christmas ::selection {
+    background: var(--xm-ink);
+    color: var(--xm-gold);
+}
+
+/* ヒーローの写真を少しだけ冷たく・暗く (冬の夕方の空気)。写真の上・雪の下に重ねる */
+.xm-tint {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(rgba(14, 26, 42, 0.5), rgba(14, 26, 42, 0.22) 55%, rgba(14, 26, 42, 0.4));
+}
+
+/* 流れる帯もネイビーに */
+body.christmas .news-ticker {
+    background: var(--xm-ink);
+    color: #e9e4d8;
+}
+.xm-news {
+    color: var(--xm-gold);
+    letter-spacing: 0.15em;
+}
+
+/* ---------- 雪 ---------- */
+
+.xm-snow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* ---------- 吊るしたオーナメント ---------- */
+
+.xm-ornaments {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 0;
+    z-index: 6;
+    pointer-events: none;
+}
+.xm-ornament {
+    position: absolute;
+    top: 0;
+    width: 26px;
+    transform-origin: 50% 0;
+    animation: xm-sway 7s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+/* 細い紐 */
+.xm-ornament::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: var(--len, 80px);
+    margin: 0 auto;
+    background: linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.6));
+}
+.xm-ornament svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: -3px;
+}
+.xm-gold { color: var(--xm-gold); }
+.xm-silver { color: var(--xm-silver); }
+.xm-pine { color: var(--xm-pine); }
+
+@keyframes xm-sway {
+    0%, 100% { transform: rotate(-2.5deg); }
+    50% { transform: rotate(2.5deg); }
+}
+
+/* スマホでは端の2つずつだけ・短めに */
+@media (max-width: 768px) {
+    .xm-ornament { width: 18px; }
+    .xm-ornament:nth-child(2),
+    .xm-ornament:nth-child(5) { display: none; }
+    .xm-ornament::before { height: calc(var(--len, 80px) * 0.6); }
+}
+
+/* ---------- Merry Christmas ---------- */
+
+.xm-greeting {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 1.6rem;
+    color: #eadfc4;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    letter-spacing: 0.12em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.xm-line {
+    width: 48px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.7;
+}
+
+/* ---------- 小さな星 (ロゴ・見出し・読み込み画面) ---------- */
+
+body.christmas .header .logo { position: relative; }
+.xm-logo-star {
+    position: absolute;
+    top: -2px;
+    right: -9px;
+    width: 9px;
+    color: var(--xm-gold);
+    line-height: 0;
+    animation: xm-twinkle 3.5s ease-in-out infinite;
+}
+
+.xm-title-star {
+    position: absolute;
+    left: 50%;
+    top: -18px;
+    width: 10px;
+    margin-left: -5px;
+    color: var(--xm-gold);
+    line-height: 0;
+    animation: xm-twinkle 4s ease-in-out infinite;
+}
+
+.xm-loader-star {
+    display: block;
+    width: 12px;
+    margin: 6px auto 0;
+    color: var(--xm-gold);
+    line-height: 0;
+    animation: xm-twinkle 2s ease-in-out infinite;
+}
+
+.xm-logo-star svg,
+.xm-title-star svg,
+.xm-loader-star svg { width: 100%; height: auto; display: block; }
+
+@keyframes xm-twinkle {
+    0%, 100% { opacity: 0.35; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1); }
+}
+
+/* ---------- フッター ---------- */
+
+.xm-footer {
+    margin-bottom: 18px;
+    color: var(--xm-gold);
+}
+.xm-footer-tree {
+    display: block;
+    width: 26px;
+    margin: 0 auto 10px;
+    line-height: 0;
+}
+.xm-footer-tree svg { width: 100%; height: auto; }
+.xm-footer-msg {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+}
+
+/* ---------- 動きを減らす設定の人には動きを止める ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .xm-ornament,
+    .xm-logo-star,
+    .xm-title-star,
+    .xm-loader-star { animation: none; }
+}
