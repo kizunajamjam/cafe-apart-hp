@@ -24,25 +24,31 @@
         '<path d="M10 0 L11.6 8.4 L20 10 L11.6 11.6 L10 20 L8.4 11.6 L0 10 L8.4 8.4 Z" fill="currentColor"/>' +
         '</svg>';
 
-    // 天使 (金の輪・ふんわり上向きの白い羽・ベル形のローブ)
+    // 天使: シャンパンゴールドの細い線画 (フッターのツリーと同じ描き方)。
+    // 羽は重なる羽根の線を扇のように広げ、金の輪・合わせた手・ローブのひだを線で描く
     var ANGEL_SVG =
-        '<svg viewBox="0 0 48 48" aria-hidden="true">' +
-        // 羽: 丸みのある上向きの羽 (コウモリに見えないよう、先をとがらせず白く)
-        '<g fill="#f7f5f0" stroke="#b9c0c8" stroke-width="0.8">' +
-        '<path d="M21 22 C14 22 7 18 5 10 C10 11 14 13 17 16 C14 12 13 8 14 4 C18 8 21 14 22 20 Z"/>' +
-        '<path d="M27 22 C34 22 41 18 43 10 C38 11 34 13 31 16 C34 12 35 8 34 4 C30 8 27 14 26 20 Z"/>' +
-        '</g>' +
-        '<g fill="none" stroke="#c4cad1" stroke-width="0.6" stroke-linecap="round">' +
-        '<path d="M19 20 C14 19 10 16 8 12 M20 18 C17 14 16 10 16 7"/>' +
-        '<path d="M29 20 C34 19 38 16 40 12 M28 18 C31 14 32 10 32 7"/>' +
-        '</g>' +
-        // ローブ
-        '<path d="M24 17 C20 17 19 22 18 28 C17 34 14 40 12 44 H36 C34 40 31 34 30 28 C29 22 28 17 24 17 Z" fill="#fbf8f1" stroke="#d6cbb3" stroke-width="0.7"/>' +
-        '<path d="M12 44 H36" stroke="#c2a878" stroke-width="1.4" stroke-linecap="round"/>' +
-        '<path d="M21 24 Q24 27 27 24" fill="none" stroke="#e6e0d2" stroke-width="0.8"/>' +
-        // 顔と金の輪
-        '<circle cx="24" cy="12.5" r="4.6" fill="#f6e3cf"/>' +
-        '<ellipse cx="24" cy="5" rx="5.2" ry="1.6" fill="none" stroke="#c2a878" stroke-width="1.4"/>' +
+        '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        // 羽 (左右)
+        '<path d="M28 23 C20 22 11 16 5 5"/>' +
+        '<path d="M28 23.5 C21 25 12 22 6 13"/>' +
+        '<path d="M28 24.5 C22 28 14 28 8 21"/>' +
+        '<path d="M28 25.5 C23 31 17 33 11 29"/>' +
+        '<path d="M28 26.5 C25 33 21 37 16 36"/>' +
+        '<path d="M 36 23 C 44 22 53 16 59 5"/>' +
+        '<path d="M 36 23.5 C 43 25 52 22 58 13"/>' +
+        '<path d="M 36 24.5 C 42 28 50 28 56 21"/>' +
+        '<path d="M 36 25.5 C 41 31 47 33 53 29"/>' +
+        '<path d="M 36 26.5 C 39 33 43 37 48 36"/>' +
+        // 金の輪と頭
+        '<ellipse cx="32" cy="6.5" rx="6" ry="1.7"/>' +
+        '<circle cx="32" cy="14" r="4.2"/>' +
+        // ローブ (外形とひだ)
+        '<path d="M28.5 20 C27 30 24 42 18 57 Q32 60 46 57 C40 42 37 30 35.5 20"/>' +
+        '<path d="M30.5 31 C29.5 40 27.5 49 25 57.5 M33.5 31 C34.5 40 36.5 49 39 57.5"/>' +
+        // 胸の前で合わせた手
+        '<path d="M29 25 Q32 30 35 25 M32 27.5 V23"/>' +
+        // 小さな星
+        '<path d="M52 4 L52.7 6.3 L55 7 L52.7 7.7 L52 10 L51.3 7.7 L49 7 L51.3 6.3 Z" fill="currentColor" stroke="none"/>' +
         '</svg>';
 
     // ヒーロー上端の常緑のガーランド。ゆるく垂れ下がる弧 (スワッグ) に沿って、

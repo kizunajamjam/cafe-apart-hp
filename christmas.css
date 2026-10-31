@@ -131,7 +131,7 @@ body.christmas .news-ticker {
     align-items: center;
     justify-content: center;
     gap: 14px;
-    margin-top: 3.6rem;   /* 上に天使が入る分あける */
+    margin-top: 4.4rem;   /* 上に天使が入る分あける */
     color: #eadfc4;
     font-family: 'Playfair Display', serif;
     font-style: italic;
@@ -152,22 +152,24 @@ body.christmas .news-ticker {
 .xm-greeting-angel {
     position: absolute;
     left: 50%;
-    top: -46px;
-    width: 40px;
-    margin-left: -20px;
+    top: -60px;
+    width: 52px;
+    margin-left: -26px;
     line-height: 0;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
-    animation: xm-float 5s ease-in-out infinite;
+    color: #eadcb8;
+    /* 写真の上でも線が埋もれないよう、後ろに暗いぼかしを敷く */
+    filter: drop-shadow(0 0 3px rgba(10, 20, 32, 0.9)) drop-shadow(0 0 8px rgba(10, 20, 32, 0.6));
+    animation: xm-float 6s ease-in-out infinite;
 }
 .xm-title-angel {
     position: absolute;
     left: 50%;
-    top: -40px;
-    width: 34px;
-    margin-left: -17px;
+    top: -50px;
+    width: 44px;
+    margin-left: -22px;
     line-height: 0;
-    filter: drop-shadow(0 1px 2px rgba(44, 62, 80, 0.25));
-    animation: xm-float 5s ease-in-out infinite;
+    color: #b0935b;
+    animation: xm-float 6s ease-in-out infinite;
 }
 .xm-logo-star {
     position: absolute;
@@ -178,6 +180,7 @@ body.christmas .news-ticker {
     line-height: 0;
     animation: xm-twinkle 3.5s ease-in-out infinite;
 }
+.xm-greeting-angel svg { stroke-width: 1.5; }
 .xm-greeting-angel svg,
 .xm-title-angel svg,
 .xm-logo-star svg { width: 100%; height: auto; display: block; }
