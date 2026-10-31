@@ -131,7 +131,7 @@ body.christmas .news-ticker {
     align-items: center;
     justify-content: center;
     gap: 14px;
-    margin-top: 1.6rem;
+    margin-top: 3.6rem;   /* 上に天使が入る分あける */
     color: #eadfc4;
     font-family: 'Playfair Display', serif;
     font-style: italic;
@@ -146,36 +146,47 @@ body.christmas .news-ticker {
     opacity: 0.7;
 }
 
-/* ---------- ヒイラギ (ロゴ・見出し・あいさつ) ---------- */
+/* ---------- 天使 (見出し・あいさつ) とロゴの星 ---------- */
 
 .xm-greeting-text { position: relative; }
-.xm-greeting-holly {
+.xm-greeting-angel {
     position: absolute;
     left: 50%;
-    top: -30px;
-    width: 36px;
-    margin-left: -18px;
+    top: -46px;
+    width: 40px;
+    margin-left: -20px;
     line-height: 0;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+    animation: xm-float 5s ease-in-out infinite;
 }
-.xm-logo-holly {
-    position: absolute;
-    top: -6px;
-    right: -16px;
-    width: 18px;
-    line-height: 0;
-    transform: rotate(18deg);
-}
-.xm-title-holly {
+.xm-title-angel {
     position: absolute;
     left: 50%;
-    top: -26px;
-    width: 30px;
-    margin-left: -15px;
+    top: -40px;
+    width: 34px;
+    margin-left: -17px;
     line-height: 0;
+    filter: drop-shadow(0 1px 2px rgba(44, 62, 80, 0.25));
+    animation: xm-float 5s ease-in-out infinite;
 }
-.xm-greeting-holly svg,
-.xm-logo-holly svg,
-.xm-title-holly svg { width: 100%; height: auto; display: block; }
+.xm-logo-star {
+    position: absolute;
+    top: -2px;
+    right: -10px;
+    width: 9px;
+    color: var(--xm-gold);
+    line-height: 0;
+    animation: xm-twinkle 3.5s ease-in-out infinite;
+}
+.xm-greeting-angel svg,
+.xm-title-angel svg,
+.xm-logo-star svg { width: 100%; height: auto; display: block; }
+
+/* 天使がふわっと浮かぶ */
+@keyframes xm-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
 
 /* ---------- 小さな星 (読み込み画面) ---------- */
 
@@ -210,8 +221,6 @@ body.christmas .header .logo { position: relative; }
     line-height: 0;
 }
 .xm-footer-tree svg { width: 100%; height: auto; }
-.xm-footer-holly { display: inline-block; width: 22px; vertical-align: -3px; margin: 0 8px; line-height: 0; }
-.xm-footer-holly svg { width: 100%; height: auto; }
 .xm-footer-msg {
     font-family: 'Playfair Display', serif;
     font-style: italic;
@@ -223,5 +232,8 @@ body.christmas .header .logo { position: relative; }
 
 @media (prefers-reduced-motion: reduce) {
     .xm-ornament,
-    .xm-loader-star { animation: none; }
+    .xm-loader-star,
+    .xm-greeting-angel,
+    .xm-title-angel,
+    .xm-logo-star { animation: none; }
 }

@@ -24,13 +24,25 @@
         '<path d="M10 0 L11.6 8.4 L20 10 L11.6 11.6 L10 20 L8.4 11.6 L0 10 L8.4 8.4 Z" fill="currentColor"/>' +
         '</svg>';
 
-    // ヒイラギ (葉2枚と赤い実3つ)
-    var HOLLY_SVG =
-        '<svg viewBox="0 0 40 24" aria-hidden="true">' +
-        '<path d="M19 13 C15 6 8 4 2 6 C4 7 4 9 3 10 C5 10 6 11 6 13 C8 12 9 13 10 15 C11 13 13 13 14 14 C14 12 16 12 19 13 Z" fill="#3f6457"/>' +
-        '<path d="M21 13 C25 6 32 4 38 6 C36 7 36 9 37 10 C35 10 34 11 34 13 C32 12 31 13 30 15 C29 13 27 13 26 14 C26 12 24 12 21 13 Z" fill="#4f7768"/>' +
-        '<circle cx="17.5" cy="15.5" r="2.6" fill="#8c2f39"/><circle cx="22.5" cy="15.5" r="2.6" fill="#8c2f39"/><circle cx="20" cy="19.5" r="2.6" fill="#a33a45"/>' +
-        '<circle cx="16.8" cy="14.8" r="0.7" fill="rgba(255,255,255,.55)"/>' +
+    // 天使 (金の輪・ふんわり上向きの白い羽・ベル形のローブ)
+    var ANGEL_SVG =
+        '<svg viewBox="0 0 48 48" aria-hidden="true">' +
+        // 羽: 丸みのある上向きの羽 (コウモリに見えないよう、先をとがらせず白く)
+        '<g fill="#f7f5f0" stroke="#b9c0c8" stroke-width="0.8">' +
+        '<path d="M21 22 C14 22 7 18 5 10 C10 11 14 13 17 16 C14 12 13 8 14 4 C18 8 21 14 22 20 Z"/>' +
+        '<path d="M27 22 C34 22 41 18 43 10 C38 11 34 13 31 16 C34 12 35 8 34 4 C30 8 27 14 26 20 Z"/>' +
+        '</g>' +
+        '<g fill="none" stroke="#c4cad1" stroke-width="0.6" stroke-linecap="round">' +
+        '<path d="M19 20 C14 19 10 16 8 12 M20 18 C17 14 16 10 16 7"/>' +
+        '<path d="M29 20 C34 19 38 16 40 12 M28 18 C31 14 32 10 32 7"/>' +
+        '</g>' +
+        // ローブ
+        '<path d="M24 17 C20 17 19 22 18 28 C17 34 14 40 12 44 H36 C34 40 31 34 30 28 C29 22 28 17 24 17 Z" fill="#fbf8f1" stroke="#d6cbb3" stroke-width="0.7"/>' +
+        '<path d="M12 44 H36" stroke="#c2a878" stroke-width="1.4" stroke-linecap="round"/>' +
+        '<path d="M21 24 Q24 27 27 24" fill="none" stroke="#e6e0d2" stroke-width="0.8"/>' +
+        // 顔と金の輪
+        '<circle cx="24" cy="12.5" r="4.6" fill="#f6e3cf"/>' +
+        '<ellipse cx="24" cy="5" rx="5.2" ry="1.6" fill="none" stroke="#c2a878" stroke-width="1.4"/>' +
         '</svg>';
 
     // ヒーロー上端の常緑のガーランド。ゆるく垂れ下がる弧 (スワッグ) に沿って、
@@ -175,7 +187,7 @@
     function addGreeting() {
         var inner = document.querySelector('.hero-inner');
         if (!inner) return;
-        var p = el('p', 'xm-greeting', '<span class="xm-line"></span><span class="xm-greeting-text"><span class="xm-greeting-holly">' + HOLLY_SVG + '</span>Merry Christmas</span><span class="xm-line"></span>');
+        var p = el('p', 'xm-greeting', '<span class="xm-line"></span><span class="xm-greeting-text"><span class="xm-greeting-angel">' + ANGEL_SVG + '</span>Merry Christmas</span><span class="xm-line"></span>');
         p.removeAttribute('aria-hidden');
         inner.appendChild(p);
     }
@@ -185,12 +197,13 @@
     function addDetails() {
         // ロゴの右肩に小さな星
         var logo = document.querySelector('.header .logo');
-        if (logo) logo.appendChild(el('span', 'xm-logo-holly', HOLLY_SVG));
+        // ロゴは小さいので天使ではなく金の星
+        if (logo) logo.appendChild(el('span', 'xm-logo-star', STAR_SVG));
 
         // セクション見出しの上に小さな星
         document.querySelectorAll('.section-title').forEach(function (title) {
             title.classList.add('xm-has-star');
-            title.insertBefore(el('span', 'xm-title-holly', HOLLY_SVG), title.firstChild);
+            title.insertBefore(el('span', 'xm-title-angel', ANGEL_SVG), title.firstChild);
         });
 
         // ニュースの流れる帯に一言
