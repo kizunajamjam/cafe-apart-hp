@@ -10,6 +10,7 @@
     --xm-silver: #d9dde2;
     --xm-pine: #3f6457;
     --xm-ink: #1d2a35;
+    --xm-red: #8c2f39;   /* 深いワインレッド。差し色としてだけ使う */
 }
 
 /* ---------- 全体の色 ---------- */
@@ -53,6 +54,25 @@ body.christmas .news-ticker {
     pointer-events: none;
 }
 
+/* ---------- 常緑のガーランド (ヒーローの上端) ---------- */
+
+.xm-garland {
+    position: absolute;
+    top: 64px;          /* ヘッダーの下 */
+    left: 0;
+    right: 0;
+    height: 34px;
+    z-index: 7;
+    pointer-events: none;
+    line-height: 0;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+}
+.xm-garland svg { width: 100%; height: 34px; display: block; }
+@media (max-width: 768px) {
+    .xm-garland { top: 56px; height: 22px; }
+    .xm-garland svg { height: 22px; }
+}
+
 /* ---------- 吊るしたオーナメント ---------- */
 
 .xm-ornaments {
@@ -89,6 +109,7 @@ body.christmas .news-ticker {
 .xm-gold { color: var(--xm-gold); }
 .xm-silver { color: var(--xm-silver); }
 .xm-pine { color: var(--xm-pine); }
+.xm-red { color: var(--xm-red); }
 
 @keyframes xm-sway {
     0%, 100% { transform: rotate(-2.5deg); }
@@ -125,29 +146,40 @@ body.christmas .news-ticker {
     opacity: 0.7;
 }
 
-/* ---------- 小さな星 (ロゴ・見出し・読み込み画面) ---------- */
+/* ---------- ヒイラギ (ロゴ・見出し・あいさつ) ---------- */
 
-body.christmas .header .logo { position: relative; }
-.xm-logo-star {
-    position: absolute;
-    top: -2px;
-    right: -9px;
-    width: 9px;
-    color: var(--xm-gold);
-    line-height: 0;
-    animation: xm-twinkle 3.5s ease-in-out infinite;
-}
-
-.xm-title-star {
+.xm-greeting-text { position: relative; }
+.xm-greeting-holly {
     position: absolute;
     left: 50%;
-    top: -18px;
-    width: 10px;
-    margin-left: -5px;
-    color: var(--xm-gold);
+    top: -30px;
+    width: 36px;
+    margin-left: -18px;
     line-height: 0;
-    animation: xm-twinkle 4s ease-in-out infinite;
 }
+.xm-logo-holly {
+    position: absolute;
+    top: -6px;
+    right: -16px;
+    width: 18px;
+    line-height: 0;
+    transform: rotate(18deg);
+}
+.xm-title-holly {
+    position: absolute;
+    left: 50%;
+    top: -26px;
+    width: 30px;
+    margin-left: -15px;
+    line-height: 0;
+}
+.xm-greeting-holly svg,
+.xm-logo-holly svg,
+.xm-title-holly svg { width: 100%; height: auto; display: block; }
+
+/* ---------- 小さな星 (読み込み画面) ---------- */
+
+body.christmas .header .logo { position: relative; }
 
 .xm-loader-star {
     display: block;
@@ -158,8 +190,6 @@ body.christmas .header .logo { position: relative; }
     animation: xm-twinkle 2s ease-in-out infinite;
 }
 
-.xm-logo-star svg,
-.xm-title-star svg,
 .xm-loader-star svg { width: 100%; height: auto; display: block; }
 
 @keyframes xm-twinkle {
@@ -180,6 +210,8 @@ body.christmas .header .logo { position: relative; }
     line-height: 0;
 }
 .xm-footer-tree svg { width: 100%; height: auto; }
+.xm-footer-holly { display: inline-block; width: 22px; vertical-align: -3px; margin: 0 8px; line-height: 0; }
+.xm-footer-holly svg { width: 100%; height: auto; }
 .xm-footer-msg {
     font-family: 'Playfair Display', serif;
     font-style: italic;
@@ -191,7 +223,5 @@ body.christmas .header .logo { position: relative; }
 
 @media (prefers-reduced-motion: reduce) {
     .xm-ornament,
-    .xm-logo-star,
-    .xm-title-star,
     .xm-loader-star { animation: none; }
 }

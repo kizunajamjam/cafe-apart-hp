@@ -24,6 +24,51 @@
         '<path d="M10 0 L11.6 8.4 L20 10 L11.6 11.6 L10 20 L8.4 11.6 L0 10 L8.4 8.4 Z" fill="currentColor"/>' +
         '</svg>';
 
+    // ヒイラギ (葉2枚と赤い実3つ)
+    var HOLLY_SVG =
+        '<svg viewBox="0 0 40 24" aria-hidden="true">' +
+        '<path d="M19 13 C15 6 8 4 2 6 C4 7 4 9 3 10 C5 10 6 11 6 13 C8 12 9 13 10 15 C11 13 13 13 14 14 C14 12 16 12 19 13 Z" fill="#3f6457"/>' +
+        '<path d="M21 13 C25 6 32 4 38 6 C36 7 36 9 37 10 C35 10 34 11 34 13 C32 12 31 13 30 15 C29 13 27 13 26 14 C26 12 24 12 21 13 Z" fill="#4f7768"/>' +
+        '<circle cx="17.5" cy="15.5" r="2.6" fill="#8c2f39"/><circle cx="22.5" cy="15.5" r="2.6" fill="#8c2f39"/><circle cx="20" cy="19.5" r="2.6" fill="#a33a45"/>' +
+        '<circle cx="16.8" cy="14.8" r="0.7" fill="rgba(255,255,255,.55)"/>' +
+        '</svg>';
+
+    // ヒーロー上端の常緑のガーランド。ゆるく垂れ下がる弧 (スワッグ) に沿って、
+    // 3色の緑の針葉を細かく重ね、弧のいちばん下に小さな玉を吊るす
+    function garlandSVG() {
+        var W = 1200, SWAG = 240, DIP = 12, TOP = 8;
+        var seed = 7;
+        var rand = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+        var yAt = function (x) { var t = (x % SWAG) / SWAG; return TOP + DIP * Math.sin(Math.PI * t); };
+        var greens = ['#24443a', '#2f5a4b', '#41705f'];
+        var needles = '';
+        for (var x = -10; x <= W + 10; x += 2.2) {
+            var y = yAt(x);
+            for (var k = 0; k < 2; k++) {
+                var ang = rand() * Math.PI * 2, len = 4 + rand() * 6;
+                var x2 = x + Math.cos(ang) * len, y2 = y + Math.sin(ang) * len * 0.75;
+                needles += '<path d="M' + x.toFixed(1) + ' ' + y.toFixed(1) + 'L' + x2.toFixed(1) + ' ' + y2.toFixed(1) +
+                    '" stroke="' + greens[Math.floor(rand() * 3)] + '"/>';
+            }
+        }
+        var deco = '';
+        for (var n = 0; n * SWAG < W + SWAG; n++) {
+            var cx = n * SWAG + SWAG / 2, cy = yAt(cx) + 5;
+            var red = n % 2 === 0;
+            deco += '<circle cx="' + cx + '" cy="' + (cy + 4) + '" r="4.2" fill="' + (red ? '#8c2f39' : '#c2a878') + '"/>' +
+                '<circle cx="' + (cx - 1.4) + '" cy="' + (cy + 2.6) + '" r="1.1" fill="rgba(255,255,255,.55)"/>';
+            // 吊るし目のところに金の小さな点
+            deco += '<circle cx="' + (n * SWAG) + '" cy="' + TOP + '" r="1.8" fill="#c2a878"/>';
+            // 弧の途中に赤い実を2つ
+            [0.28, 0.72].forEach(function (t) {
+                var bx = n * SWAG + SWAG * t;
+                deco += '<circle cx="' + bx.toFixed(1) + '" cy="' + (yAt(bx) + 1).toFixed(1) + '" r="1.7" fill="#a33a45"/>';
+            });
+        }
+        return '<svg viewBox="0 0 ' + W + ' 34" preserveAspectRatio="xMidYMin slice" aria-hidden="true">' +
+            '<g stroke-width="1.3" stroke-linecap="round" fill="none">' + needles + '</g>' + deco + '</svg>';
+    }
+
     var TREE_SVG =
         '<svg viewBox="0 0 40 56" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true">' +
         '<path d="M20 6 L30 22 H24 L34 38 H26 L36 50 H4 L14 38 H6 L16 22 H10 Z"/>' +
@@ -68,7 +113,7 @@
             w = hero.clientWidth; h = hero.clientHeight;
             canvas.width = w * dpr; canvas.height = h * dpr;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            var count = Math.round(Math.min(70, w / 18));
+            var count = Math.round(Math.min(110, w / 12));
             while (flakes.length < count) flakes.push(newFlake(true));
             flakes.length = count;
         }
@@ -76,7 +121,7 @@
             return {
                 x: Math.random() * w,
                 y: anywhere ? Math.random() * h : -6,
-                r: 0.6 + Math.random() * 1.8,
+                r: 0.6 + Math.random() * 2.2,
                 vy: 0.25 + Math.random() * 0.55,
                 drift: Math.random() * Math.PI * 2,
                 a: 0.35 + Math.random() * 0.5
@@ -113,8 +158,8 @@
     function addOrnaments(hero) {
         var row = el('div', 'xm-ornaments');
         // [横位置 %, 紐の長さ px, 形, 色]
-        [[8, 70, 'ball', 'gold'], [15, 120, 'star', 'silver'], [22, 46, 'drop', 'pine'],
-         [78, 96, 'drop', 'silver'], [85, 54, 'ball', 'pine'], [92, 132, 'star', 'gold']]
+        [[8, 70, 'ball', 'red'], [15, 120, 'star', 'gold'], [22, 46, 'drop', 'pine'],
+         [78, 96, 'drop', 'silver'], [85, 54, 'ball', 'red'], [92, 132, 'star', 'gold']]
             .forEach(function (o, i) {
                 var item = el('span', 'xm-ornament xm-' + o[3], ornamentSVG(o[2]));
                 item.style.left = o[0] + '%';
@@ -130,7 +175,7 @@
     function addGreeting() {
         var inner = document.querySelector('.hero-inner');
         if (!inner) return;
-        var p = el('p', 'xm-greeting', '<span class="xm-line"></span><span class="xm-greeting-text">Merry Christmas</span><span class="xm-line"></span>');
+        var p = el('p', 'xm-greeting', '<span class="xm-line"></span><span class="xm-greeting-text"><span class="xm-greeting-holly">' + HOLLY_SVG + '</span>Merry Christmas</span><span class="xm-line"></span>');
         p.removeAttribute('aria-hidden');
         inner.appendChild(p);
     }
@@ -140,12 +185,12 @@
     function addDetails() {
         // ロゴの右肩に小さな星
         var logo = document.querySelector('.header .logo');
-        if (logo) logo.appendChild(el('span', 'xm-logo-star', STAR_SVG));
+        if (logo) logo.appendChild(el('span', 'xm-logo-holly', HOLLY_SVG));
 
         // セクション見出しの上に小さな星
         document.querySelectorAll('.section-title').forEach(function (title) {
             title.classList.add('xm-has-star');
-            title.insertBefore(el('span', 'xm-title-star', STAR_SVG), title.firstChild);
+            title.insertBefore(el('span', 'xm-title-holly', HOLLY_SVG), title.firstChild);
         });
 
         // ニュースの流れる帯に一言
@@ -154,7 +199,7 @@
             for (var i = 3; i < items.length; i += 4) {
                 var a = el('span', 'news-item xm-news');
                 a.removeAttribute('aria-hidden');
-                a.textContent = '✦ Merry Christmas ✦';
+                a.textContent = '✦ Merry Christmas — 素敵なクリスマスを ✦';
                 items[i].after(a);
             }
         });
@@ -178,6 +223,7 @@
         var hero = document.querySelector('.hero');
         if (hero) {
             hero.appendChild(el('div', 'xm-tint'));
+            hero.appendChild(el('div', 'xm-garland', garlandSVG()));
             addSnow(hero);
             addOrnaments(hero);
         }
