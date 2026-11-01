@@ -131,7 +131,7 @@ body.christmas .news-ticker {
     align-items: center;
     justify-content: center;
     gap: 14px;
-    margin-top: 5.6rem;   /* 上に天使が入る分あける */
+    margin-top: 3.6rem;   /* 上に天使が入る分あける */
     color: #eadfc4;
     font-family: 'Playfair Display', serif;
     font-style: italic;
@@ -152,9 +152,9 @@ body.christmas .news-ticker {
 .xm-greeting-angel {
     position: absolute;
     left: 50%;
-    top: -78px;
-    width: 96px;
-    margin-left: -48px;
+    top: -42px;
+    width: 50px;
+    margin-left: -25px;
     line-height: 0;
     /* 写真の上でも浮くよう、後ろにやわらかい暗いぼかし */
     filter: drop-shadow(0 4px 10px rgba(10, 20, 32, 0.55));
@@ -163,9 +163,9 @@ body.christmas .news-ticker {
 .xm-title-angel {
     position: absolute;
     left: 50%;
-    top: -52px;
-    width: 62px;
-    margin-left: -31px;
+    top: -34px;
+    width: 40px;
+    margin-left: -20px;
     line-height: 0;
     animation: xm-float 6s ease-in-out infinite;
 }
