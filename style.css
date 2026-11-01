@@ -499,6 +499,17 @@ body.custom-cursor-active .cursor {
     align-items: center;
 }
 
+/* Concept は左揃えなので、見出しの飾り・下線も左端に揃える */
+.concept-text .section-title::after {
+    left: 0;
+    transform: none;
+}
+
+.concept-text .section-title .xm-title-angel {
+    left: 0;
+    margin-left: 0;
+}
+
 .catchphrase {
     font-size: 1.8rem;
     font-weight: 400;
