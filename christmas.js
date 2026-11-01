@@ -3,12 +3,12 @@
  * 下の期間（日本時間）だけ、サイトに大人しめでクールなクリスマスの飾りを追加する。
  * 期間外は何もしないので、読み込まれていても見た目は変わらない。
  *
- * 確認用ページ（christmas-preview/）では window.XMAS_PREVIEW = true で、期間外でも表示する。
+ * window.XMAS_PREVIEW = true にすると期間外でも表示する（確認用）。
  * 公開するときは index.html に christmas.css と christmas.js を読み込む2行を足す。
  * 片付けるときはその2行と christmas.js / christmas.css を削除する。
  */
 (function () {
-    var XMAS_START = '2026-12-01T00:00:00+09:00';
+    var XMAS_START = '2026-11-01T00:00:00+09:00';
     var XMAS_END = '2026-12-25T23:59:59+09:00';
 
     var now = Date.now();
