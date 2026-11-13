@@ -61,7 +61,7 @@
   }
   .sub::after { content: ""; width: 14mm; height: .4mm; background: var(--slate); opacity: .5; }
 
-  main { position: relative; flex: 1; padding: 7mm 16mm 9mm; display: flex; flex-direction: column; }
+  main { position: relative; padding: 7mm 16mm 7mm; display: flex; flex-direction: column; }
 
   /* item cards */
   .photo { position: relative; border-radius: 4mm; overflow: hidden; background: var(--cream-2);
@@ -77,7 +77,7 @@
   .price small { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 700; }
 
   .hero { display: grid; grid-template-columns: 1fr; position: relative; }
-  .hero .photo { height: 80mm; }
+  .hero .photo { height: 86mm; }
   .hero .photo img { object-position: 50% 62%; }
   .hero .price { width: 28mm; height: 28mm; right: -4mm; bottom: -6mm; font-size: 11mm; transform: rotate(-8deg); }
   .hero .price small { font-size: 4.6mm; margin-left: .4mm; }
@@ -95,9 +95,9 @@
   }
 
   .pair { margin-top: 8mm; display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
-  .item { display: grid; grid-template-columns: 46mm 1fr; column-gap: 6mm; align-items: center; }
+  .item { display: grid; grid-template-columns: 50mm 1fr; column-gap: 6mm; align-items: center; }
   .item .media { position: relative; }
-  .item .photo { height: 46mm; }
+  .item .photo { height: 50mm; }
   .item .price { width: 20mm; height: 20mm; right: -4mm; bottom: -5mm; font-size: 7.6mm; transform: rotate(-8deg); }
   .item .price small { font-size: 3.4mm; margin-left: .3mm; }
   .item h2 { font-weight: 900; font-size: 5mm; line-height: 1.4; letter-spacing: 0; white-space: nowrap; }
@@ -116,7 +116,7 @@
 
   .drinks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7mm; text-align: center; }
   .drink .cup {
-    width: 32mm; height: 32mm; margin: 0 auto; border-radius: 50%; overflow: hidden;
+    width: 35mm; height: 35mm; margin: 0 auto; border-radius: 50%; overflow: hidden;
     border: 1.4mm solid #fff; box-shadow: 0 0 0 .5mm var(--kraft), 0 2.5mm 6mm rgba(47,38,32,.14);
   }
   .drink .cup img { width: 100%; height: 100%; object-fit: cover; }
@@ -134,25 +134,19 @@
   }
   .ice-wrap { text-align: center; }
 
-  /* footer */
+  /* footer (帯なし・店舗情報のみ) */
   footer {
-    position: relative; margin-top: auto; background: var(--slate); color: #fff;
-    display: grid; grid-template-columns: 46mm 1fr 22mm; align-items: center; gap: 6mm;
-    padding: 5mm 16mm 5.5mm;
+    position: relative; margin: auto 16mm 0; padding: 4.5mm 0 8mm;
+    border-top: .4mm dashed rgba(76,105,113,.45);
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6mm;
   }
-  footer::before {
-    content: ""; position: absolute; left: 0; right: 0; top: -5mm; height: 5mm;
-    background: radial-gradient(circle at 5mm 5mm, var(--slate) 5mm, transparent 5.1mm) 0 0 / 10mm 5mm repeat-x;
-  }
-  footer .logo img { width: 100%; display: block; }
-  footer dl { font-size: 3.1mm; line-height: 1.55; display: grid; grid-template-columns: auto 1fr; column-gap: 3mm; row-gap: .6mm; }
-  footer dt { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 2.5mm; letter-spacing: .2em; color: rgba(255,255,255,.65); padding-top: .5mm; }
+  footer dl { font-size: 3.1mm; line-height: 1.5; display: grid; grid-template-columns: auto 1fr; column-gap: 3.5mm; row-gap: .5mm; color: var(--ink); }
+  footer dt { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 2.4mm; letter-spacing: .2em; color: var(--slate); padding-top: .6mm; }
   footer dd { font-weight: 500; }
   footer dd b { font-weight: 700; }
-  footer .qr { text-align: center; }
-  footer .qr .box { background: #fff; padding: 2mm; border-radius: 2mm; }
-  footer .qr img { width: 100%; display: block; }
-  footer .qr span { display: block; margin-top: 1.2mm; font-family: 'Outfit', sans-serif; font-size: 2.3mm; letter-spacing: .12em; color: rgba(255,255,255,.8); }
+  footer .qr { display: flex; align-items: center; gap: 3mm; }
+  footer .qr img { width: 18mm; display: block; }
+  footer .qr span { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 2.4mm; line-height: 1.5; letter-spacing: .15em; color: var(--slate); text-align: right; }
 </style>
 </head>
 <body>
@@ -217,13 +211,12 @@
   </main>
 
   <footer>
-    <div class="logo"><img src="../../assets/images/Logo4.png" alt="café apart"></div>
     <dl>
-      <dt>ADDRESS</dt><dd>大阪府茨木市駅前4-6-7<br>JR・阪急茨木駅 徒歩10分</dd>
+      <dt>ADDRESS</dt><dd>大阪府茨木市駅前4-6-7（JR・阪急茨木駅 徒歩10分）</dd>
       <dt>OPEN</dt><dd>9:30 – 18:30（L.O. 18:00）<b>／ 火曜定休</b></dd>
       <dt>INSTAGRAM</dt><dd>@cafe.apart</dd>
     </dl>
-    <div class="qr"><div class="box"><img src="qr-instagram.png" alt="Instagram QR"></div><span>INSTAGRAM</span></div>
+    <div class="qr"><span>FOLLOW US<br>ON INSTAGRAM</span><img src="qr-instagram.png" alt="Instagram QR"></div>
   </footer>
 </div>
 </body>
