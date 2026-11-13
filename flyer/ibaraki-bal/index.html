@@ -82,7 +82,7 @@
   .price small { font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 700; }
 
   .hero { display: grid; grid-template-columns: 1fr; position: relative; }
-  .hero .photo { height: 66mm; }
+  .hero .photo { height: 74mm; }
   .hero .photo img { object-position: 50% 62%; }
   .hero .price { width: 28mm; height: 28mm; right: -4mm; bottom: -6mm; font-size: 11mm; transform: rotate(-8deg); }
   .hero .price small { font-size: 4.6mm; margin-left: .4mm; }
@@ -99,17 +99,18 @@
     font-size: 2.8mm; letter-spacing: .25em; padding: 1.4mm 3mm; border-radius: 10mm;
   }
 
-  .pair { margin-top: 7mm; display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+  .pair { margin-top: 8mm; display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+  .item { display: grid; grid-template-columns: 46mm 1fr; column-gap: 6mm; align-items: center; }
   .item .media { position: relative; }
-  .item .photo { height: 41mm; }
+  .item .photo { height: 46mm; }
   .item .price { width: 20mm; height: 20mm; right: -4mm; bottom: -5mm; font-size: 7.6mm; transform: rotate(-8deg); }
   .item .price small { font-size: 3.4mm; margin-left: .3mm; }
-  .item h2 { margin-top: 3.5mm; font-weight: 900; font-size: 5.4mm; letter-spacing: .02em; }
-  .item .en { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 2.6mm; letter-spacing: .25em; color: var(--muted); margin-top: .6mm; text-transform: uppercase; }
+  .item h2 { font-weight: 900; font-size: 5mm; line-height: 1.4; letter-spacing: 0; white-space: nowrap; }
+  .item .en { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 2.5mm; line-height: 1.5; letter-spacing: .2em; color: var(--muted); margin-top: 1.6mm; text-transform: uppercase; }
   .item.sand .price { background: var(--teal); }
 
   /* plus divider */
-  .plus { position: relative; margin: 4.5mm 0 4mm; display: flex; align-items: center; gap: 4mm; }
+  .plus { position: relative; margin: 6mm 0 4.5mm; display: flex; align-items: center; gap: 4mm; }
   .plus .line { flex: 1; height: 0; border-top: .5mm dashed rgba(76,105,113,.45); }
   .plus .mark {
     width: 13mm; height: 13mm; border-radius: 50%; background: var(--slate); color: #fff;
@@ -120,7 +121,7 @@
 
   .drinks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7mm; text-align: center; }
   .drink .cup {
-    width: 29mm; height: 29mm; margin: 0 auto; border-radius: 50%; overflow: hidden;
+    width: 32mm; height: 32mm; margin: 0 auto; border-radius: 50%; overflow: hidden;
     border: 1.4mm solid #fff; box-shadow: 0 0 0 .5mm var(--kraft), 0 2.5mm 6mm rgba(47,38,32,.14);
   }
   .drink .cup img { width: 100%; height: 100%; object-fit: cover; }
@@ -185,15 +186,15 @@
         <div class="media"><div class="photo">
           <img src="anko-butter-sand.jpg" alt="あんバターサンド">
         </div><div class="price">600<small>円</small></div></div>
-        <h2>あんバターサンド</h2>
-        <div class="en">Anko Butter Sandwich</div>
+        <div><h2>あんバター<br>サンド</h2>
+        <div class="en">Anko Butter<br>Sandwich</div></div>
       </article>
       <article class="item">
         <div class="media"><div class="photo">
-          <img src="../../assets/images/hotdog.jpg" alt="ニューヨークホットドッグ" style="object-position:50% 45%">
+          <img src="../../assets/images/hotdog.jpg" alt="ニューヨークホットドッグ" style="object-position:50% 50%">
         </div><div class="price">600<small>円</small></div></div>
-        <h2>ニューヨークホットドッグ</h2>
-        <div class="en">New York Hot Dog</div>
+        <div><h2>ニューヨーク<br>ホットドッグ</h2>
+        <div class="en">New York<br>Hot Dog</div></div>
       </article>
     </section>
 
